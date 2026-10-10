@@ -247,11 +247,15 @@ godot --headless --script scripts/dump_rig.gd     # every clip's rest bounds
 
 ## Still to do
 
-- **Audio** — none of the sound is ported.
+- **Audio** — there is none to port: the SWF has no sound tags and the `.fla`
+  no media. The feature is loading a *user-supplied* MP3 and playing it in sync
+  with the timeline (`Timeline.mSound`, `mFileRef`), which is the "pretend Miku
+  is singing along" case from the author's description. Blocked on the
+  transport, though playing a file with no sync at all is trivial in Godot.
 - **Mouse recording** — `AxisTrack_46` (100 ms sample grid, interpolated
   playback) plus the ease ramp that lets a recorded path blend back into live
-  mouse control. Needs a transport, which in the original lives in the timeline
-  editor UI.
+  mouse control. The recorder itself is self-contained; only the transport
+  behind it is not.
 - **Backdrop** — the scrolling layer (`scrollRect` at 40/640 scale). xfl2svg
   mis-places composites, so the stage is flat sky. Its slices are extracted but
   unused.
