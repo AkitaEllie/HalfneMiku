@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/miku_rig.gd" id="2_rig"]
+
+[node name="Miku" type="Node2D"]
+script = ExtResource("2_rig")

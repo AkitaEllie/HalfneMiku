@@ -1,0 +1,11 @@
+# Godot's import cache and editor state.
+godot/.godot/
+godot/.import/
+*.translation
+
+# Export output. Rebuild with tools/build.sh.
+build/
+
+# Screenshots are captured into preview/ by tools/screenshot.sh, but the
+# editor's autosave copy is noise.
+preview/.*.autosave.kra

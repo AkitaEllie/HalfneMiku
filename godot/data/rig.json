@@ -1,0 +1,2930 @@
+{
+ "root": "Miku",
+ "render": [
+  {
+   "name": "Backdrop",
+   "leaf": false,
+   "ownShapes": 11,
+   "slots": [
+    -1,
+    5
+   ],
+   "stage": true
+  },
+  {
+   "name": "Miku parts/Ahoge",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Arm_L",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Arm_R",
+   "leaf": false,
+   "ownShapes": 0,
+   "slots": [],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Bang_L",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Bang_M",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Bang_R",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Bangs",
+   "leaf": false,
+   "ownShapes": 0,
+   "slots": [],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Belt",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Clip Back",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Clip Front",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Collar",
+   "leaf": false,
+   "ownShapes": 3,
+   "slots": [
+    -1,
+    0
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Eyes",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Face",
+   "leaf": false,
+   "ownShapes": 1,
+   "slots": [
+    1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Head Base",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Head",
+   "leaf": false,
+   "ownShapes": 1,
+   "slots": [
+    1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Leg_L",
+   "leaf": true,
+   "ownShapes": 3,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Leg_R",
+   "leaf": true,
+   "ownShapes": 3,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/LowerBody",
+   "leaf": false,
+   "ownShapes": 0,
+   "slots": [],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Momi_L",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Momi_R",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Mouth",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Neck",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Phone_L",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Phone_R",
+   "leaf": true,
+   "ownShapes": 3,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Shirttail_L",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Shirttail_R",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Shoulder_L",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Shoulder_R",
+   "leaf": true,
+   "ownShapes": 3,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Skirt",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Tail_L",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Tail_R",
+   "leaf": true,
+   "ownShapes": 1,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/Tie",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": false
+  },
+  {
+   "name": "Miku parts/UpperBody",
+   "leaf": false,
+   "ownShapes": 3,
+   "slots": [
+    1
+   ],
+   "stage": false
+  },
+  {
+   "name": "backdrops/Negi bundle",
+   "leaf": true,
+   "ownShapes": 2,
+   "slots": [
+    -1
+   ],
+   "stage": true
+  },
+  {
+   "name": "backdrops/Negi row",
+   "leaf": false,
+   "ownShapes": 0,
+   "slots": [],
+   "stage": true
+  }
+ ],
+ "rig": [
+  {
+   "path": "clipBR",
+   "name": "clipBR",
+   "symbol": "Miku parts/Clip Back",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    69.15,
+    -202.6
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "tail_R",
+   "name": "tail_R",
+   "symbol": "Miku parts/Tail_R",
+   "depth": 0,
+   "matrix": [
+    0.970932006835938,
+    -0.229141235351563,
+    0.229141235351563,
+    0.970932006835938,
+    70.1,
+    -205.75
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "tail_L",
+   "name": "tail_L",
+   "symbol": "Miku parts/Tail_L",
+   "depth": 0,
+   "matrix": [
+    0.942825317382813,
+    0.3302001953125,
+    -0.3302001953125,
+    0.942825317382813,
+    -44.95,
+    -197
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "leg_R",
+   "name": "leg_R",
+   "symbol": "Miku parts/Leg_R",
+   "depth": 0,
+   "matrix": [
+    0.999969482421875,
+    0.0048065185546875,
+    -0.0048065185546875,
+    0.999969482421875,
+    16.4,
+    -45.1
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "leg_L",
+   "name": "leg_L",
+   "symbol": "Miku parts/Leg_L",
+   "depth": 0,
+   "matrix": [
+    0.999969482421875,
+    0.0048065185546875,
+    -0.0048065185546875,
+    0.999969482421875,
+    -11.2,
+    -45.05
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "lower",
+   "name": "lower",
+   "symbol": "Miku parts/LowerBody",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    0.5,
+    -67.45
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "lower.skirt",
+   "name": "skirt",
+   "symbol": "Miku parts/Skirt",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    0,
+    0
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "lower.belt",
+   "name": "belt",
+   "symbol": "Miku parts/Belt",
+   "depth": 1,
+   "matrix": [
+    0.965927124023438,
+    -0.258819580078125,
+    0.258819580078125,
+    0.965927124023438,
+    20,
+    10.65
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "upper",
+   "name": "upper",
+   "symbol": "Miku parts/UpperBody",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    0.05,
+    -70.9
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "upper.shirt_R",
+   "name": "shirt_R",
+   "symbol": "Miku parts/Shirttail_R",
+   "depth": 1,
+   "matrix": [
+    0.92083740234375,
+    -0.386932373046875,
+    0.386932373046875,
+    0.92083740234375,
+    6.6,
+    -7.2
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "upper.shirt_L",
+   "name": "shirt_L",
+   "symbol": "Miku parts/Shirttail_L",
+   "depth": 1,
+   "matrix": [
+    0.8914794921875,
+    0.45013427734375,
+    -0.45013427734375,
+    0.8914794921875,
+    -8.65,
+    -11.35
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "shoulder_R",
+   "name": "shoulder_R",
+   "symbol": "Miku parts/Shoulder_R",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    13.7,
+    -106.95
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "shoulder_L",
+   "name": "shoulder_L",
+   "symbol": "Miku parts/Shoulder_L",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -11.3,
+    -106.95
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "neck",
+   "name": "neck",
+   "symbol": "Miku parts/Neck",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    1.7,
+    -112.85
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "collar",
+   "name": "collar",
+   "symbol": "Miku parts/Collar",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -0.25,
+    -106.45
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "collar.tie",
+   "name": "tie",
+   "symbol": "Miku parts/Tie",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -1.9,
+    9.2
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head",
+   "name": "head",
+   "symbol": "Miku parts/Head",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    1.7,
+    -125.05
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.phone_L",
+   "name": "phone_L",
+   "symbol": "Miku parts/Phone_L",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -43,
+    -26.85
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.momi_L",
+   "name": "momi_L",
+   "symbol": "Miku parts/Momi_L",
+   "depth": 1,
+   "matrix": [
+    0.997848510742188,
+    -0.026641845703125,
+    0.026641845703125,
+    0.997848510742188,
+    -45.85,
+    -35.5
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.clipBL",
+   "name": "clipBL",
+   "symbol": "Miku parts/Clip Back",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -47.05,
+    -86.05
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.clipFL",
+   "name": "clipFL",
+   "symbol": "Miku parts/Clip Front",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -48.4,
+    -83.4
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.base",
+   "name": "base",
+   "symbol": "Miku parts/Head Base",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0.07421875,
+    0.95465087890625,
+    1.05,
+    -5.6
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.phone_R",
+   "name": "phone_R",
+   "symbol": "Miku parts/Phone_R",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    57.5,
+    -28.9
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.clipFR",
+   "name": "clipFR",
+   "symbol": "Miku parts/Clip Front",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    67.8,
+    -74.95
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.face",
+   "name": "face",
+   "symbol": "Miku parts/Face",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -5.65,
+    -22.9
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.face.eyes",
+   "name": "eyes",
+   "symbol": "Miku parts/Eyes",
+   "depth": 2,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    0.5,
+    -6.9
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.face.mouth",
+   "name": "mouth",
+   "symbol": "Miku parts/Mouth",
+   "depth": 2,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    0.2,
+    18.75
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.momi_R",
+   "name": "momi_R",
+   "symbol": "Miku parts/Momi_R",
+   "depth": 1,
+   "matrix": [
+    0.960357666015625,
+    0.275634765625,
+    -0.275634765625,
+    0.960357666015625,
+    44.55,
+    -36.5
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.bangs",
+   "name": "bangs",
+   "symbol": "Miku parts/Bangs",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -4.7,
+    -96.4
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.bangs.L",
+   "name": "L",
+   "symbol": "Miku parts/Bang_L",
+   "depth": 2,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -13.55,
+    -1.3
+   ],
+   "tp": [
+    -0.0025,
+    0
+   ]
+  },
+  {
+   "path": "head.bangs.M",
+   "name": "M",
+   "symbol": "Miku parts/Bang_M",
+   "depth": 2,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    7.5,
+    -1.7
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.bangs.R",
+   "name": "R",
+   "symbol": "Miku parts/Bang_R",
+   "depth": 2,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    34.35,
+    0
+   ],
+   "tp": [
+    0,
+    0
+   ]
+  },
+  {
+   "path": "head.ahoge",
+   "name": "ahoge",
+   "symbol": "Miku parts/Ahoge",
+   "depth": 1,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -19.3,
+    -103.45
+   ],
+   "tp": [
+    0,
+    -0.0025
+   ]
+  },
+  {
+   "path": "arm_L",
+   "name": "arm_L",
+   "symbol": "Miku parts/Arm_L",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    -17.35,
+    -88.75
+   ],
+   "tp": [
+    -0.0025,
+    0
+   ]
+  },
+  {
+   "path": "arm_R",
+   "name": "arm_R",
+   "symbol": "Miku parts/Arm_R",
+   "depth": 0,
+   "matrix": [
+    1,
+    0,
+    0,
+    1,
+    14.15,
+    -89.75
+   ],
+   "tp": [
+    -0.0025,
+    0
+   ]
+  },
+  {
+   "path": "arm_R.unnamed",
+   "name": "unnamed",
+   "symbol": "Miku parts/Arm_L",
+   "depth": 1,
+   "matrix": [
+    -1,
+    0,
+    0,
+    1,
+    -0.1,
+    0
+   ],
+   "tp": [
+    -0.0025,
+    -0.425
+   ]
+  }
+ ],
+ "expressions": {
+  "Miku parts/Eyes": {
+   "happy": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__happy__open.svg",
+     "origin": [
+      -36.9,
+      -19.6
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__happy__closed.svg",
+     "origin": [
+      -41.25,
+      -0.45
+     ]
+    }
+   },
+   "jaded": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__jaded__open.svg",
+     "origin": [
+      -36.9,
+      -4.15
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__jaded__closed.svg",
+     "origin": [
+      -37.75,
+      2.65
+     ]
+    }
+   },
+   "o_o": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__o_o__open.svg",
+     "origin": [
+      -39.15,
+      -11.8
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__o_o__closed.svg",
+     "origin": [
+      -40.35,
+      1.8
+     ]
+    }
+   },
+   "*_*": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__*_*__open.svg",
+     "origin": [
+      -44.8,
+      -29.15
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__*_*__closed.svg",
+     "origin": [
+      -39.9,
+      -14.85
+     ]
+    }
+   },
+   "@_@": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__@_@__open.svg",
+     "origin": [
+      -41.45,
+      -20.45
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__@_@__closed.svg",
+     "origin": [
+      -37.3,
+      -10.0
+     ]
+    }
+   },
+   "sideglance": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__sideglance__open.svg",
+     "origin": [
+      -41.95,
+      -18.75
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__sideglance__closed.svg",
+     "origin": [
+      -43.15,
+      2.7
+     ]
+    }
+   },
+   "eheh": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__eheh__open.svg",
+     "origin": [
+      -41.75,
+      -7.1164
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__eheh__closed.svg",
+     "origin": [
+      -42.45,
+      -2.05
+     ]
+    }
+   },
+   "pumped": {
+    "open": {
+     "texture": "res://assets/parts/Miku parts_Eyes__pumped__open.svg",
+     "origin": [
+      -37.75,
+      -24.4
+     ]
+    },
+    "closed": {
+     "texture": "res://assets/parts/Miku parts_Eyes__pumped__closed.svg",
+     "origin": [
+      -37.25,
+      -4.7
+     ]
+    }
+   }
+  },
+  "Miku parts/Mouth": {
+   "happy": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__happy__m.svg",
+     "origin": [
+      -7.0,
+      -3.45
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__happy__a.svg",
+     "origin": [
+      -8.5938,
+      -5.0
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__happy__i.svg",
+     "origin": [
+      -8.65,
+      -4.6
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__happy__u.svg",
+     "origin": [
+      -3.25,
+      -7.05
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__happy__e.svg",
+     "origin": [
+      -8.05,
+      -4.7
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__happy__o.svg",
+     "origin": [
+      -5.8,
+      -5.85
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__happy__n.svg",
+     "origin": [
+      -5.15,
+      -3.65
+     ]
+    }
+   },
+   "neutral": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__neutral__m.svg",
+     "origin": [
+      -6.15,
+      -1.4
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__neutral__a.svg",
+     "origin": [
+      -7.4,
+      -6.25
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__neutral__i.svg",
+     "origin": [
+      -8.15,
+      -3.9
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__neutral__u.svg",
+     "origin": [
+      -3.25,
+      -7.05
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__neutral__e.svg",
+     "origin": [
+      -8.05,
+      -4.175
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__neutral__o.svg",
+     "origin": [
+      -5.8,
+      -5.85
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__neutral__n.svg",
+     "origin": [
+      -5.05,
+      -3.85
+     ]
+    }
+   },
+   "cat": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__cat__m.svg",
+     "origin": [
+      -5.95,
+      -3.45
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__cat__a.svg",
+     "origin": [
+      -6.0,
+      -6.15
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__cat__i.svg",
+     "origin": [
+      -7.75,
+      -3.5
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__cat__u.svg",
+     "origin": [
+      -3.25,
+      -7.05
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__cat__e.svg",
+     "origin": [
+      -8.4,
+      -2.7
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__cat__o.svg",
+     "origin": [
+      -5.8,
+      -5.75
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__cat__n.svg",
+     "origin": [
+      -4.65,
+      -3.3
+     ]
+    }
+   },
+   "angry": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__angry__m.svg",
+     "origin": [
+      -8.9,
+      -3.6
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__angry__a.svg",
+     "origin": [
+      -8.65,
+      -9.15
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__angry__i.svg",
+     "origin": [
+      -9.15,
+      -4.7
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__angry__u.svg",
+     "origin": [
+      -7.4,
+      -4.4
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__angry__e.svg",
+     "origin": [
+      -10.65,
+      -4.9
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__angry__o.svg",
+     "origin": [
+      -10.15,
+      -9.75
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__angry__n.svg",
+     "origin": [
+      -5.9,
+      -3.2
+     ]
+    }
+   },
+   "duck": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__duck__m.svg",
+     "origin": [
+      -7.9,
+      -7.55
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__duck__a.svg",
+     "origin": [
+      -8.15,
+      -13.45
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__duck__i.svg",
+     "origin": [
+      -11.2,
+      -7.15
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__duck__u.svg",
+     "origin": [
+      -10.65,
+      -9.4
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__duck__e.svg",
+     "origin": [
+      -10.35,
+      -11.8109
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__duck__o.svg",
+     "origin": [
+      -9.9,
+      -14.75
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__duck__n.svg",
+     "origin": [
+      -7.4,
+      -10.0
+     ]
+    }
+   },
+   "drool": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__drool__m.svg",
+     "origin": [
+      -7.4,
+      -2.9
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__drool__a.svg",
+     "origin": [
+      -8.5938,
+      -5.0
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__drool__i.svg",
+     "origin": [
+      -8.65,
+      -4.6
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__drool__u.svg",
+     "origin": [
+      -3.25,
+      -7.05
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__drool__e.svg",
+     "origin": [
+      -8.05,
+      -4.7
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__drool__o.svg",
+     "origin": [
+      -5.8,
+      -5.85
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__drool__n.svg",
+     "origin": [
+      -5.15,
+      -3.65
+     ]
+    }
+   },
+   "tongue": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__tongue__m.svg",
+     "origin": [
+      -5.4,
+      -0.75
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__tongue__a.svg",
+     "origin": [
+      -7.15,
+      -10.85
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__tongue__i.svg",
+     "origin": [
+      -9.65,
+      -4.4
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__tongue__u.svg",
+     "origin": [
+      -10.9,
+      -4.95
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__tongue__e.svg",
+     "origin": [
+      -8.65,
+      -11.1
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__tongue__o.svg",
+     "origin": [
+      -7.35,
+      -9.25
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__tongue__n.svg",
+     "origin": [
+      -3.9,
+      -1.65
+     ]
+    }
+   },
+   "pout": {
+    "m": {
+     "texture": "res://assets/parts/Miku parts_Mouth__pout__m.svg",
+     "origin": [
+      -6.4,
+      -3.35
+     ]
+    },
+    "a": {
+     "texture": "res://assets/parts/Miku parts_Mouth__pout__a.svg",
+     "origin": [
+      -5.1,
+      -6.4
+     ]
+    },
+    "i": {
+     "texture": "res://assets/parts/Miku parts_Mouth__pout__i.svg",
+     "origin": [
+      -7.9,
+      -2.3
+     ]
+    },
+    "u": {
+     "texture": "res://assets/parts/Miku parts_Mouth__pout__u.svg",
+     "origin": [
+      -5.65,
+      -3.7
+     ]
+    },
+    "e": {
+     "texture": "res://assets/parts/Miku parts_Mouth__pout__e.svg",
+     "origin": [
+      -5.9,
+      -7.15
+     ]
+    },
+    "o": {
+     "texture": "res://assets/parts/Miku parts_Mouth__pout__o.svg",
+     "origin": [
+      -7.15,
+      -7.35
+     ]
+    },
+    "n": {
+     "texture": "res://assets/parts/Miku parts_Mouth__pout__n.svg",
+     "origin": [
+      -5.4,
+      -5.25
+     ]
+    }
+   }
+  }
+ },
+ "stage": {},
+ "parts": [
+  {
+   "id": "Backdrop",
+   "name": "Backdrop",
+   "file": "res://assets/parts/Backdrop.svg",
+   "origin": [
+    -151.5,
+    -1.0
+   ],
+   "size": [
+    934.85,
+    482.0
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Backdrop__slot+5",
+   "name": "Backdrop",
+   "file": "res://assets/parts/Backdrop__slot+5.svg",
+   "origin": [
+    -111.0,
+    -58.0
+   ],
+   "size": [
+    862.0,
+    539.95
+   ],
+   "slot": 5
+  },
+  {
+   "id": "Miku parts_Ahoge",
+   "name": "Miku parts/Ahoge",
+   "file": "res://assets/parts/Miku parts_Ahoge.svg",
+   "origin": [
+    -12.55,
+    -29.9
+   ],
+   "size": [
+    14.65,
+    32.25
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Arm_L",
+   "name": "Miku parts/Arm_L",
+   "file": "res://assets/parts/Miku parts_Arm_L.svg",
+   "origin": [
+    -9.65,
+    -23.95
+   ],
+   "size": [
+    19.25,
+    31.1
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Bang_L",
+   "name": "Miku parts/Bang_L",
+   "file": "res://assets/parts/Miku parts_Bang_L.svg",
+   "origin": [
+    -62.8,
+    -10.6
+   ],
+   "size": [
+    72.05,
+    114.7
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Bang_M",
+   "name": "Miku parts/Bang_M",
+   "file": "res://assets/parts/Miku parts_Bang_M.svg",
+   "origin": [
+    -31.0,
+    -10.9
+   ],
+   "size": [
+    49.35,
+    84.8
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Bang_R",
+   "name": "Miku parts/Bang_R",
+   "file": "res://assets/parts/Miku parts_Bang_R.svg",
+   "origin": [
+    -20.95,
+    -10.1
+   ],
+   "size": [
+    56.45,
+    106.2
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Belt",
+   "name": "Miku parts/Belt",
+   "file": "res://assets/parts/Miku parts_Belt.svg",
+   "origin": [
+    -8.35,
+    -6.2
+   ],
+   "size": [
+    18.65,
+    28.5
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Clip Back",
+   "name": "Miku parts/Clip Back",
+   "file": "res://assets/parts/Miku parts_Clip Back.svg",
+   "origin": [
+    -7.05,
+    -32.8
+   ],
+   "size": [
+    24.35,
+    53.2
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Clip Front",
+   "name": "Miku parts/Clip Front",
+   "file": "res://assets/parts/Miku parts_Clip Front.svg",
+   "origin": [
+    -14.9,
+    -35.9
+   ],
+   "size": [
+    21.7,
+    54.1
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Collar",
+   "name": "Miku parts/Collar",
+   "file": "res://assets/parts/Miku parts_Collar.svg",
+   "origin": [
+    -17.466,
+    -12.7
+   ],
+   "size": [
+    38.766,
+    25.45
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Collar__slot+0",
+   "name": "Miku parts/Collar",
+   "file": "res://assets/parts/Miku parts_Collar__slot+0.svg",
+   "origin": [
+    -16.1,
+    -1.0
+   ],
+   "size": [
+    32.9,
+    19.4
+   ],
+   "slot": 0
+  },
+  {
+   "id": "Miku parts_Eyes",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes.svg",
+   "origin": [
+    -36.9,
+    -19.6
+   ],
+   "size": [
+    70.1,
+    36.05
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Face__slot+1",
+   "name": "Miku parts/Face",
+   "file": "res://assets/parts/Miku parts_Face__slot+1.svg",
+   "origin": [
+    -37.75,
+    6.8
+   ],
+   "size": [
+    76.9,
+    11.45
+   ],
+   "slot": 1
+  },
+  {
+   "id": "Miku parts_Head Base",
+   "name": "Miku parts/Head Base",
+   "file": "res://assets/parts/Miku parts_Head Base.svg",
+   "origin": [
+    -51.7467,
+    -113.65
+   ],
+   "size": [
+    126.4967,
+    129.0088
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Head__slot+1",
+   "name": "Miku parts/Head",
+   "file": "res://assets/parts/Miku parts_Head__slot+1.svg",
+   "origin": [
+    -53.1,
+    -18.85
+   ],
+   "size": [
+    12.5,
+    29.65
+   ],
+   "slot": 1
+  },
+  {
+   "id": "Miku parts_Leg_L",
+   "name": "Miku parts/Leg_L",
+   "file": "res://assets/parts/Miku parts_Leg_L.svg",
+   "origin": [
+    -10.3,
+    -7.05
+   ],
+   "size": [
+    18.8,
+    56.0
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Leg_R",
+   "name": "Miku parts/Leg_R",
+   "file": "res://assets/parts/Miku parts_Leg_R.svg",
+   "origin": [
+    -9.8,
+    -6.05
+   ],
+   "size": [
+    19.35,
+    56.0
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Momi_L",
+   "name": "Miku parts/Momi_L",
+   "file": "res://assets/parts/Miku parts_Momi_L.svg",
+   "origin": [
+    -14.0,
+    -11.7137
+   ],
+   "size": [
+    28.1057,
+    69.3137
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Momi_R",
+   "name": "Miku parts/Momi_R",
+   "file": "res://assets/parts/Miku parts_Momi_R.svg",
+   "origin": [
+    -9.7795,
+    -13.65
+   ],
+   "size": [
+    22.2633,
+    77.0
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Mouth",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth.svg",
+   "origin": [
+    -8.5938,
+    -5.0
+   ],
+   "size": [
+    17.7937,
+    12.55
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Neck",
+   "name": "Miku parts/Neck",
+   "file": "res://assets/parts/Miku parts_Neck.svg",
+   "origin": [
+    -5.8,
+    -15.3768
+   ],
+   "size": [
+    11.6,
+    22.3268
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Phone_L",
+   "name": "Miku parts/Phone_L",
+   "file": "res://assets/parts/Miku parts_Phone_L.svg",
+   "origin": [
+    -18.05,
+    -23.65
+   ],
+   "size": [
+    33.8,
+    49.9184
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Phone_R",
+   "name": "Miku parts/Phone_R",
+   "file": "res://assets/parts/Miku parts_Phone_R.svg",
+   "origin": [
+    -18.1,
+    -25.85
+   ],
+   "size": [
+    33.8,
+    52.2539
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Shirttail_L",
+   "name": "Miku parts/Shirttail_L",
+   "file": "res://assets/parts/Miku parts_Shirttail_L.svg",
+   "origin": [
+    -15.2,
+    -4.1
+   ],
+   "size": [
+    30.6,
+    51.8
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Shirttail_R",
+   "name": "Miku parts/Shirttail_R",
+   "file": "res://assets/parts/Miku parts_Shirttail_R.svg",
+   "origin": [
+    -16.7234,
+    -8.75
+   ],
+   "size": [
+    42.2734,
+    53.6
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Shoulder_L",
+   "name": "Miku parts/Shoulder_L",
+   "file": "res://assets/parts/Miku parts_Shoulder_L.svg",
+   "origin": [
+    -6.35,
+    -4.8
+   ],
+   "size": [
+    13.6,
+    26.45
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Shoulder_R",
+   "name": "Miku parts/Shoulder_R",
+   "file": "res://assets/parts/Miku parts_Shoulder_R.svg",
+   "origin": [
+    -6.35,
+    -4.8
+   ],
+   "size": [
+    13.6,
+    26.45
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Skirt",
+   "name": "Miku parts/Skirt",
+   "file": "res://assets/parts/Miku parts_Skirt.svg",
+   "origin": [
+    -36.0,
+    -5.85
+   ],
+   "size": [
+    73.0,
+    41.7
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Tail_L",
+   "name": "Miku parts/Tail_L",
+   "file": "res://assets/parts/Miku parts_Tail_L.svg",
+   "origin": [
+    -41.15,
+    -12.65
+   ],
+   "size": [
+    91.0,
+    183.65
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Tail_R",
+   "name": "Miku parts/Tail_R",
+   "file": "res://assets/parts/Miku parts_Tail_R.svg",
+   "origin": [
+    -58.45,
+    -7.85
+   ],
+   "size": [
+    90.85,
+    185.95
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Tie",
+   "name": "Miku parts/Tie",
+   "file": "res://assets/parts/Miku parts_Tie.svg",
+   "origin": [
+    -10.35,
+    -3.65
+   ],
+   "size": [
+    23.725,
+    63.5
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_UpperBody__slot+1",
+   "name": "Miku parts/UpperBody",
+   "file": "res://assets/parts/Miku parts_UpperBody__slot+1.svg",
+   "origin": [
+    -17.0332,
+    -49.85
+   ],
+   "size": [
+    36.0832,
+    49.3
+   ],
+   "slot": 1
+  },
+  {
+   "id": "backdrops_Negi bundle",
+   "name": "backdrops/Negi bundle",
+   "file": "res://assets/parts/backdrops_Negi bundle.svg",
+   "origin": [
+    -54.6104,
+    -109.35
+   ],
+   "size": [
+    98.2768,
+    116.95
+   ],
+   "slot": -1
+  },
+  {
+   "id": "Miku parts_Eyes__happy__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__happy__open.svg",
+   "origin": [
+    -36.9,
+    -19.6
+   ],
+   "size": [
+    70.1,
+    36.05
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__happy__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__happy__closed.svg",
+   "origin": [
+    -41.25,
+    -0.45
+   ],
+   "size": [
+    82.5,
+    14.25
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__jaded__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__jaded__open.svg",
+   "origin": [
+    -36.9,
+    -4.15
+   ],
+   "size": [
+    73.95,
+    21.45
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__jaded__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__jaded__closed.svg",
+   "origin": [
+    -37.75,
+    2.65
+   ],
+   "size": [
+    74.5,
+    10.1
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__o_o__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__o_o__open.svg",
+   "origin": [
+    -39.15,
+    -11.8
+   ],
+   "size": [
+    78.8,
+    29.45
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__o_o__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__o_o__closed.svg",
+   "origin": [
+    -40.35,
+    1.8
+   ],
+   "size": [
+    79.65,
+    11.5
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__*_*__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__*_*__open.svg",
+   "origin": [
+    -44.8,
+    -29.15
+   ],
+   "size": [
+    89.55,
+    55.9
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__*_*__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__*_*__closed.svg",
+   "origin": [
+    -39.9,
+    -14.85
+   ],
+   "size": [
+    79.9,
+    27.4
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__@_@__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__@_@__open.svg",
+   "origin": [
+    -41.45,
+    -20.45
+   ],
+   "size": [
+    82.8,
+    34.25
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__@_@__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__@_@__closed.svg",
+   "origin": [
+    -37.3,
+    -10.0
+   ],
+   "size": [
+    74.15,
+    25.8
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__sideglance__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__sideglance__open.svg",
+   "origin": [
+    -41.95,
+    -18.75
+   ],
+   "size": [
+    81.3,
+    33.05
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__sideglance__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__sideglance__closed.svg",
+   "origin": [
+    -43.15,
+    2.7
+   ],
+   "size": [
+    81.45,
+    14.1
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__eheh__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__eheh__open.svg",
+   "origin": [
+    -41.75,
+    -7.1164
+   ],
+   "size": [
+    83.9,
+    22.3664
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__eheh__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__eheh__closed.svg",
+   "origin": [
+    -42.45,
+    -2.05
+   ],
+   "size": [
+    83.75,
+    14.85
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__pumped__open",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__pumped__open.svg",
+   "origin": [
+    -37.75,
+    -24.4
+   ],
+   "size": [
+    75.4,
+    41.15
+   ]
+  },
+  {
+   "id": "Miku parts_Eyes__pumped__closed",
+   "name": "Miku parts/Eyes",
+   "file": "res://assets/parts/Miku parts_Eyes__pumped__closed.svg",
+   "origin": [
+    -37.25,
+    -4.7
+   ],
+   "size": [
+    73.0,
+    18.95
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__happy__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__happy__m.svg",
+   "origin": [
+    -7.0,
+    -3.45
+   ],
+   "size": [
+    15.05,
+    7.8
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__happy__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__happy__a.svg",
+   "origin": [
+    -8.5938,
+    -5.0
+   ],
+   "size": [
+    17.7937,
+    12.55
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__happy__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__happy__i.svg",
+   "origin": [
+    -8.65,
+    -4.6
+   ],
+   "size": [
+    19.05,
+    10.25
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__happy__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__happy__u.svg",
+   "origin": [
+    -3.25,
+    -7.05
+   ],
+   "size": [
+    8.0,
+    12.3
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__happy__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__happy__e.svg",
+   "origin": [
+    -8.05,
+    -4.7
+   ],
+   "size": [
+    18.05,
+    13.7414
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__happy__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__happy__o.svg",
+   "origin": [
+    -5.8,
+    -5.85
+   ],
+   "size": [
+    11.7,
+    13.25
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__happy__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__happy__n.svg",
+   "origin": [
+    -5.15,
+    -3.65
+   ],
+   "size": [
+    12.05,
+    8.05
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__neutral__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__neutral__m.svg",
+   "origin": [
+    -6.15,
+    -1.4
+   ],
+   "size": [
+    13.8,
+    3.8
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__neutral__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__neutral__a.svg",
+   "origin": [
+    -7.4,
+    -6.25
+   ],
+   "size": [
+    16.3,
+    13.4
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__neutral__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__neutral__i.svg",
+   "origin": [
+    -8.15,
+    -3.9
+   ],
+   "size": [
+    17.8,
+    9.3
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__neutral__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__neutral__u.svg",
+   "origin": [
+    -3.25,
+    -7.05
+   ],
+   "size": [
+    8.0,
+    12.3
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__neutral__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__neutral__e.svg",
+   "origin": [
+    -8.05,
+    -4.175
+   ],
+   "size": [
+    18.05,
+    13.2164
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__neutral__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__neutral__o.svg",
+   "origin": [
+    -5.8,
+    -5.85
+   ],
+   "size": [
+    11.7,
+    13.25
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__neutral__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__neutral__n.svg",
+   "origin": [
+    -5.05,
+    -3.85
+   ],
+   "size": [
+    12.15,
+    7.95
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__cat__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__cat__m.svg",
+   "origin": [
+    -5.95,
+    -3.45
+   ],
+   "size": [
+    12.6,
+    7.6
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__cat__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__cat__a.svg",
+   "origin": [
+    -6.0,
+    -6.15
+   ],
+   "size": [
+    13.6,
+    16.0
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__cat__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__cat__i.svg",
+   "origin": [
+    -7.75,
+    -3.5
+   ],
+   "size": [
+    13.7,
+    8.8
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__cat__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__cat__u.svg",
+   "origin": [
+    -3.25,
+    -7.05
+   ],
+   "size": [
+    8.0,
+    12.3
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__cat__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__cat__e.svg",
+   "origin": [
+    -8.4,
+    -2.7
+   ],
+   "size": [
+    18.2,
+    9.7172
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__cat__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__cat__o.svg",
+   "origin": [
+    -5.8,
+    -5.75
+   ],
+   "size": [
+    11.7,
+    13.15
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__cat__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__cat__n.svg",
+   "origin": [
+    -4.65,
+    -3.3
+   ],
+   "size": [
+    9.05,
+    7.2
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__angry__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__angry__m.svg",
+   "origin": [
+    -8.9,
+    -3.6
+   ],
+   "size": [
+    20.8,
+    7.75
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__angry__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__angry__a.svg",
+   "origin": [
+    -8.65,
+    -9.15
+   ],
+   "size": [
+    19.05,
+    18.05
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__angry__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__angry__i.svg",
+   "origin": [
+    -9.15,
+    -4.7
+   ],
+   "size": [
+    21.55,
+    12.35
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__angry__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__angry__u.svg",
+   "origin": [
+    -7.4,
+    -4.4
+   ],
+   "size": [
+    12.3,
+    11.3
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__angry__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__angry__e.svg",
+   "origin": [
+    -10.65,
+    -4.9
+   ],
+   "size": [
+    22.8,
+    13.55
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__angry__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__angry__o.svg",
+   "origin": [
+    -10.15,
+    -9.75
+   ],
+   "size": [
+    20.9,
+    20.4
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__angry__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__angry__n.svg",
+   "origin": [
+    -5.9,
+    -3.2
+   ],
+   "size": [
+    14.8,
+    8.1
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__duck__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__duck__m.svg",
+   "origin": [
+    -7.9,
+    -7.55
+   ],
+   "size": [
+    9.8,
+    16.2
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__duck__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__duck__a.svg",
+   "origin": [
+    -8.15,
+    -13.45
+   ],
+   "size": [
+    9.15,
+    23.6
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__duck__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__duck__i.svg",
+   "origin": [
+    -11.2,
+    -7.15
+   ],
+   "size": [
+    25.75,
+    13.55
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__duck__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__duck__u.svg",
+   "origin": [
+    -10.65,
+    -9.4
+   ],
+   "size": [
+    9.15,
+    17.55
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__duck__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__duck__e.svg",
+   "origin": [
+    -10.35,
+    -11.8109
+   ],
+   "size": [
+    26.25,
+    18.9609
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__duck__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__duck__o.svg",
+   "origin": [
+    -9.9,
+    -14.75
+   ],
+   "size": [
+    21.05,
+    27.9
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__duck__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__duck__n.svg",
+   "origin": [
+    -7.4,
+    -10.0
+   ],
+   "size": [
+    9.3,
+    19.9
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__drool__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__drool__m.svg",
+   "origin": [
+    -7.4,
+    -2.9
+   ],
+   "size": [
+    15.8,
+    7.8
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__drool__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__drool__a.svg",
+   "origin": [
+    -8.5938,
+    -5.0
+   ],
+   "size": [
+    17.2123,
+    14.65
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__drool__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__drool__i.svg",
+   "origin": [
+    -8.65,
+    -4.6
+   ],
+   "size": [
+    19.05,
+    12.5
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__drool__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__drool__u.svg",
+   "origin": [
+    -3.25,
+    -7.05
+   ],
+   "size": [
+    8.0,
+    14.95
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__drool__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__drool__e.svg",
+   "origin": [
+    -8.05,
+    -4.7
+   ],
+   "size": [
+    18.05,
+    14.1
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__drool__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__drool__o.svg",
+   "origin": [
+    -5.8,
+    -5.85
+   ],
+   "size": [
+    11.7,
+    15.25
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__drool__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__drool__n.svg",
+   "origin": [
+    -5.15,
+    -3.65
+   ],
+   "size": [
+    12.05,
+    9.55
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__tongue__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__tongue__m.svg",
+   "origin": [
+    -5.4,
+    -0.75
+   ],
+   "size": [
+    8.3,
+    10.15
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__tongue__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__tongue__a.svg",
+   "origin": [
+    -7.15,
+    -10.85
+   ],
+   "size": [
+    16.5334,
+    24.75
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__tongue__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__tongue__i.svg",
+   "origin": [
+    -9.65,
+    -4.4
+   ],
+   "size": [
+    22.55,
+    14.8
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__tongue__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__tongue__u.svg",
+   "origin": [
+    -10.9,
+    -4.95
+   ],
+   "size": [
+    14.3,
+    15.1
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__tongue__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__tongue__e.svg",
+   "origin": [
+    -8.65,
+    -11.1
+   ],
+   "size": [
+    15.3,
+    15.5
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__tongue__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__tongue__o.svg",
+   "origin": [
+    -7.35,
+    -9.25
+   ],
+   "size": [
+    20.7,
+    27.4
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__tongue__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__tongue__n.svg",
+   "origin": [
+    -3.9,
+    -1.65
+   ],
+   "size": [
+    8.3,
+    6.05
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__pout__m",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__pout__m.svg",
+   "origin": [
+    -6.4,
+    -3.35
+   ],
+   "size": [
+    16.3,
+    8.25
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__pout__a",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__pout__a.svg",
+   "origin": [
+    -5.1,
+    -6.4
+   ],
+   "size": [
+    12.0,
+    15.05
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__pout__i",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__pout__i.svg",
+   "origin": [
+    -7.9,
+    -2.3
+   ],
+   "size": [
+    15.01,
+    8.2
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__pout__u",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__pout__u.svg",
+   "origin": [
+    -5.65,
+    -3.7
+   ],
+   "size": [
+    10.55,
+    9.1
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__pout__e",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__pout__e.svg",
+   "origin": [
+    -5.9,
+    -7.15
+   ],
+   "size": [
+    17.8,
+    12.8
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__pout__o",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__pout__o.svg",
+   "origin": [
+    -7.15,
+    -7.35
+   ],
+   "size": [
+    12.7,
+    13.75
+   ]
+  },
+  {
+   "id": "Miku parts_Mouth__pout__n",
+   "name": "Miku parts/Mouth",
+   "file": "res://assets/parts/Miku parts_Mouth__pout__n.svg",
+   "origin": [
+    -5.4,
+    -5.25
+   ],
+   "size": [
+    12.8,
+    8.35
+   ]
+  }
+ ]
+}
