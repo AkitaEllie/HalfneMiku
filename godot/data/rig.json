@@ -1540,6 +1540,161 @@
    "file": "res://assets/bg/Backdrop__blank.png"
   }
  },
+ "frames": {
+  "UI/Icon": {
+   "face": {
+    "file": "res://assets/icons/UI_Icon__face.svg",
+    "origin": [
+     -15.15,
+     -10.902
+    ]
+   },
+   "blink": {
+    "file": "res://assets/icons/UI_Icon__blink.svg",
+    "origin": [
+     -15.15,
+     -7.7
+    ]
+   },
+   "background": {
+    "file": "res://assets/icons/UI_Icon__background.svg",
+    "origin": [
+     -17.5,
+     -11.35
+    ]
+   },
+   "music": {
+    "file": "res://assets/icons/UI_Icon__music.svg",
+    "origin": [
+     -15.4,
+     -15.5
+    ]
+   },
+   "vowel": {
+    "file": "res://assets/icons/UI_Icon__vowel.svg",
+    "origin": [
+     -16.15,
+     -16.1
+    ]
+   },
+   "back": {
+    "file": "res://assets/icons/UI_Icon__back.svg",
+    "origin": [
+     -14.4,
+     -13.95
+    ]
+   },
+   "?": {
+    "file": "res://assets/icons/UI_Icon__random_q.svg",
+    "origin": [
+     -9.5,
+     -13.85
+    ]
+   },
+   "random": {
+    "file": "res://assets/icons/UI_Icon__random.svg",
+    "origin": [
+     -13.65,
+     -15.05
+    ]
+   },
+   "help": {
+    "file": "res://assets/icons/UI_Icon__help.svg",
+    "origin": [
+     -11.7,
+     -15.95
+    ]
+   },
+   "key": {
+    "file": "res://assets/icons/UI_Icon__key.svg",
+    "origin": [
+     -16.875,
+     -11.95
+    ]
+   },
+   "load": {
+    "file": "res://assets/icons/UI_Icon__load.svg",
+    "origin": [
+     -11.9,
+     -18.75
+    ]
+   },
+   "my_pictures": {
+    "file": "res://assets/icons/UI_Icon__my_pictures.svg",
+    "origin": [
+     -14.1,
+     -17.1
+    ]
+   },
+   "reset": {
+    "file": "res://assets/icons/UI_Icon__reset.svg",
+    "origin": [
+     -13.0,
+     -10.15
+    ]
+   },
+   "studio": {
+    "file": "res://assets/icons/UI_Icon__studio.svg",
+    "origin": [
+     -13.7,
+     -15.1
+    ]
+   },
+   "expand": {
+    "file": "res://assets/icons/UI_Icon__expand.svg",
+    "origin": [
+     -16.05,
+     -13.6
+    ]
+   }
+  },
+  "UI/Cursors": {
+   "move": {
+    "file": "res://assets/icons/UI_Cursors__move.svg",
+    "origin": [
+     -10.75,
+     -11.15
+    ]
+   },
+   "zoom": {
+    "file": "res://assets/icons/UI_Cursors__zoom.svg",
+    "origin": [
+     -6.25,
+     -6.3
+    ]
+   },
+   "cursor": {
+    "file": "res://assets/icons/UI_Cursors__cursor.svg",
+    "origin": [
+     -1.8,
+     -1.8
+    ]
+   }
+  },
+  "UI/Button": {
+   "normal": {
+    "file": "res://assets/icons/UI_Button__normal.svg",
+    "origin": [
+     -22.0,
+     -22.0
+    ]
+   },
+   "over": {
+    "file": "res://assets/icons/UI_Button__over.svg",
+    "origin": [
+     -22.0,
+     -22.0
+    ]
+   },
+   "down": {
+    "file": "res://assets/icons/UI_Button__down.svg",
+    "origin": [
+     -22.0,
+     -22.0
+    ]
+   }
+  }
+ },
  "placement": {
   "x": 383.45,
   "y": 466.65,

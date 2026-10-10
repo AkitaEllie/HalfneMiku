@@ -65,6 +65,16 @@ func _apply_expression(sprite: Sprite2D, symbol: String, set_name: String,
 	return true
 
 
+## The texture path for one expression slice, e.g. an eye set's open frame or a
+## mouth set's "a" phase. The UI's face and vowel buttons draw themselves from
+## these rather than from separate artwork, because the original draws them from
+## `Eyes` and `Mouth` instances too. Empty when the set or phase is unknown.
+func expression_texture(symbol: String, set_name: String, phase: String) -> String:
+	var entry: Dictionary = _expressions.get(symbol, {}).get(set_name, {}) \
+		.get(phase, {})
+	return entry.get("texture", "")
+
+
 ## Switch the eye expression set, e.g. "happy" or "jaded" (Eyes.ChangeSet).
 func set_eye_set(set_name: String) -> void:
 	if not _expressions.get(EYES_SYMBOL, {}).has(set_name):

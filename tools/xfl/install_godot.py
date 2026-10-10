@@ -137,6 +137,43 @@ def main():
             }
     data["stage"] = stage
 
+    # UI icons: one cropped texture per labelled frame, keyed by name.
+    icons: dict = {}
+    icon_dir = os.path.join(godot, "assets", "icons")
+    shutil.rmtree(icon_dir, ignore_errors=True)
+    os.makedirs(icon_dir, exist_ok=True)
+    for name, labels in data.get("frames", {}).items():
+        stem = name.replace("/", "_")
+        for entry in labels:
+            safe = entry["name"].replace("/", "_").replace(" ", "_")
+            safe = "random_q" if safe == "?" else safe
+            # JPEXS may have supplied this frame as PNG (the button chrome),
+            # otherwise it is the xfl2svg SVG.
+            png = os.path.join(work, "svg", "%s__%s.png" % (stem, safe))
+            if os.path.exists(png):
+                dest = os.path.join(icon_dir, "%s__%s.png" % (stem, safe))
+                shutil.copy(png, dest)
+                bb = png_content_bbox(dest)
+                if bb:
+                    crop_png(png, dest, bb)
+                icons.setdefault(name, {})[entry["name"]] = {
+                    "file": "res://assets/icons/%s__%s.png" % (stem, safe),
+                }
+                continue
+            rendered = os.path.join(work, "svg", "%s__%s.svg" % (stem, safe))
+            if not os.path.exists(rendered):
+                continue
+            dest = os.path.join(icon_dir, "%s__%s.svg" % (stem, safe))
+            res = subprocess.run(
+                [sys.executable, os.path.join(HERE, "crop_svg.py"), rendered, dest],
+                check=True, capture_output=True, text=True)
+            vx, vy, _vw, _vh = (float(x) for x in res.stdout.split())
+            icons.setdefault(name, {})[entry["name"]] = {
+                "file": "res://assets/icons/%s__%s.svg" % (stem, safe),
+                "origin": [vx, vy],
+            }
+    data["frames"] = icons
+
     # Expressions: one cropped texture per (set, phase), keyed by name so the
     # rig can swap a texture at runtime instead of baking a single frame.
     expressions = {}

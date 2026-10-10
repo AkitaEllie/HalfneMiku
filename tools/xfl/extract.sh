@@ -134,6 +134,26 @@ if rig.get("expressions"):
                 shutil.copy(src, os.path.join(out, dest_stem + ".svg"))
         print(f"  {name}: {len(wanted)} frames -> {last}")
 
+# UI icons: one texture per labelled frame, selected by name at runtime
+# (`icon.gotoAndStop("back")`). No set/phase nesting -- each label stands alone.
+for name, labels in rig.get("frames", {}).items():
+    stem = name.replace("/", "_")
+    last = max(e["frame"] for e in labels)
+    with tempfile.TemporaryDirectory() as tmp:
+        subprocess.run([tool, xfl, name, tmp, "--timeline-type", "symbol",
+                        "--first-frame", "1", "--last-frame", str(last),
+                        "--no-background"], check=True, capture_output=True)
+        n = 0
+        for entry in labels:
+            src = os.path.join(tmp, "%s_%03d.svg" % (stem, entry["frame"]))
+            if not os.path.exists(src):
+                continue
+            safe = entry["name"].replace("/", "_").replace(" ", "_")
+            safe = "random_q" if safe == "?" else safe
+            shutil.copy(src, os.path.join(out, "%s__%s.svg" % (stem, safe)))
+            n += 1
+    print(f"  {name}: {n} icon frames -> {last}")
+
 # The backdrop is a timeline of named presets. Render it once per labelled
 # frame. These are separate images rather than rig slices: they are stage art,
 # and the symbol also carries a guide-layer Miku reference that must not be
@@ -192,6 +212,7 @@ print('\n'.join(p['name'] for p in rig['stage']['Backdrop']))
     i=$((i + 1))
   done
   echo "  copied $(ls "$WORK/svg"/Backdrop__*.png 2>/dev/null | wc -l) backdrop frames"
+
 else
   echo "FFDEC not set -- skipping the JPEXS backdrop render" >&2
   echo "set FFDEC=/path/to/ffdec.jar to get correct gradient and filter art" >&2

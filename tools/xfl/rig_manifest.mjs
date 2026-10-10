@@ -304,7 +304,30 @@ function main() {
 // FLA's geometry and the rig matrices are all unscaled. Read it from there
 // rather than hardcoding, and use the document's stage size rather than
 // Backdrop.Autofit's legacy 640x480, which only applies to user-loaded images.
-let placement = null;
+// Symbols that are one-artwork-per-labelled-frame and are selected at runtime
+// by name (`icon.gotoAndStop("back")`). Unlike the expression timelines there
+// is no set/phase nesting -- each label is a standalone picture.
+//
+// `UI/Cursors` is here because the backdrop set's move and zoom buttons are
+// `Cursors`, not `Icon`: `UI_Pane_38.Init` builds those two with
+// `cursor.gotoAndStop("move")` and scales the result 1.5. They live at
+// `LIBRARY/UI/Cursors.xml` rather than beside the other UI symbols, and the
+// class in the SWF carries no symbol of its own to look up.
+const FRAME_SYMBOLS = ["UI/Icon", "UI/Cursors"];
+
+// `Button`'s chrome, for `RefreshState`'s normal / hover-or-down / down states.
+//
+// Only frame 3 carries artwork in the .fla; frames 1 and 2 are empty there,
+// though the compiled SWF has the frame on all three. Frame 3 is used for
+// every state because it is also the only one without `UI/keycode_display`
+// baked into it -- rendering the SWF bakes the keybind glyph in permanently,
+// so every button would show a stray "A". Hover and press differ by tint and
+// offset instead, which is what RefreshState changes visually anyway.
+const RANGE_SYMBOLS = {
+  "UI/Button": [["normal", 3], ["over", 3], ["down", 3]],
+};
+
+  let placement = null;
 const stageSize = [num(dom, "width", 800), num(dom, "height", 600)];
 for (const tl of findAll(dom, "DOMTimeline")) {
   for (const layer of findAll(tl, "DOMLayer")) {
@@ -315,6 +338,20 @@ for (const tl of findAll(dom, "DOMTimeline")) {
     }
   }
 }
+
+  // One texture per labelled frame, for symbols the UI selects by name.
+  const frames = {};
+  for (const name of FRAME_SYMBOLS) {
+    const sym = byName.get(name);
+    if (!sym) continue;
+    const list = labelFrames(sym);
+    if (list.length) frames[name] = list;
+  }
+  for (const [name, states] of Object.entries(RANGE_SYMBOLS)) {
+    const sym = byName.get(name);
+    if (!sym) continue;
+    frames[name] = states.map(([s, f]) => ({ name: s, frame: f }));
+  }
 
   // Frame-based expressions, keyed by symbol. These are not part textures: the
   // rig picks one per state at runtime instead of baking a single frame.
@@ -329,12 +366,13 @@ for (const tl of findAll(dom, "DOMTimeline")) {
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
   fs.writeFileSync(
     outFile,
-    JSON.stringify({ root: rootName, render, rig: instances, expressions, stage, placement }, null, 1)
+    JSON.stringify({ root: rootName, render, rig: instances, expressions, stage, frames, placement }, null, 1)
   );
   console.log(
     `rig: ${instances.length} instances, ${render.length} symbols to render, ` +
       `${Object.keys(expressions).length} expression timelines, ` +
-      `${Object.values(stage).flat().length} stage presets` +
+      `${Object.values(stage).flat().length} stage presets, ` +
+      `${Object.values(frames).flat().length} ui icons` +
       (placement ? `, stage placement ${placement.x},${placement.y}` : '')
   );
 }

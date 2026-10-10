@@ -78,6 +78,46 @@ var _backdrop_index := 0
 var _miku_centre_x := 0.0
 var _miku_feet_y := 0.0
 
+## The bottom bar, a stand-in for the original's runtime-built `UI_Pane`.
+var _bar: PanelContainer
+var _bar_field: Control
+
+## `ButtonSet.SPACING`, the grid pitch the original lays its buttons out on.
+const BAR_SPACING := 45.0
+## `ButtonSet.Init`'s default column count. The backdrop set only reaches
+## column eight, but the root menu reaches twelve, so the pane is drawn wide
+## enough for the widest set the way the original's shared pane is.
+const BAR_COLS := 13
+## Where the pane sits. The original eases it to y 500 in `Update` and shifts
+## it in from the left by `presence * 10 - 5`; this is that settled position on
+## an 800x600 stage.
+const BAR_X := 82.0
+const BAR_Y := 76.0
+var _icons: Dictionary = {}
+var _thumbnails: Array[Button] = []
+
+## The four `ButtonSet`s `UI_Pane_38.Init` builds, by name. Only one is active
+## at a time; `ActivateSet` swaps between them and each set's back button
+## returns to the root. The original keeps them all as children of one pane and
+## fades `presence`, so they share the pane's position and grid.
+var _sets: Dictionary = {}
+var _active_set := "root"
+
+
+## The face set's second row, in `UI_Pane_38.Init`'s order. This is *not* the
+## order `MOUTH_SETS` walks for the bracket keys -- the original lays the face
+## set out as `["happy","neutral","cat","angry","pout","drool","duck","tongue"]`
+## while the keyboard cycle is a different sequence, so the two are kept apart.
+const MOUTH_MENU := ["happy", "neutral", "cat", "angry", "pout", "drool", "duck", "tongue"]
+
+## The vowel buttons' labels and phases, from `Init`'s `vowels` table. The last
+## is the random-phase button, which the original draws as an `Icon` rather than
+## a `Mouth` because there is no shape to show for it.
+const VOWEL_BUTTONS := [
+	["m", "m", "closed"], ["a", "a", "ah"], ["i", "i", "ee"], ["u", "u", "oo"],
+	["e", "e", "eh"], ["o", "o", "oh"], ["n", "n", "teeth"], ["?", "random", "random"],
+]
+
 
 func _ready() -> void:
 	for args in OS.get_cmdline_user_args():
@@ -121,6 +161,7 @@ func _ready() -> void:
 
 	# Now she is placed, the backdrop can go under her.
 	_set_backdrop(0)
+	_build_bar()
 
 
 ## Where the rig goes on stage: the transform the document's root timeline
@@ -197,6 +238,7 @@ func _set_backdrop(index: int) -> void:
 	# The texture is the art (cropped to its own alpha bounds), so the floor is
 	# simply its bottom edge. Anchor that under her feet and her centre under
 	# its centre.
+	_update_thumbnail_highlight()
 	_backdrop.offset += Vector2(
 		_miku_centre_x - tex_size.x * 0.5 * _backdrop.scale.x + BACKDROP_NUDGE_X,
 		_miku_feet_y - tex_size.y * _backdrop.scale.y + BACKDROP_NUDGE_Y
@@ -316,6 +358,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.keycode >= KEY_1 and event.keycode <= KEY_8:
 		_cycle_set(EYE_SETS, (event.keycode - KEY_1) % EYE_SETS.size())
 		get_viewport().set_input_as_handled()
+	elif event.keycode == KEY_TAB:
+		# The original hides the pane with its own HIDE toggle; Tab is ours.
+		_toggle_bar()
+		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_BRACKETLEFT or event.keycode == KEY_BRACKETRIGHT:
 		# The mouth has its own, disjoint list of sets, so it gets its own
 		# keys rather than sharing the eye row.
@@ -348,3 +394,371 @@ func _cycle_set(sets: Array, index: int) -> void:
 		rig.set_eye_set(sets[index])
 	else:
 		rig.set_mouth_set(sets[index])
+
+## The bottom bar.
+##
+## The original does not contain this as artwork: `UI_Pane` is an empty symbol
+## and `UI_Pane_38.Init` builds the whole thing at runtime from `Button`, `Icon`
+## and `ButtonSet`, paging between a root menu, face, vowel and backdrop set.
+##
+## `ButtonSet` lays its buttons out on an absolute grid rather than in
+## containers -- `Display` seeks each button to
+## `column * presence * SPACING + SPACING / 2`, with `SPACING` 45 and eight
+## columns -- and scales the whole set by its animated `presence`. So this
+## places children by hand instead of using `HBoxContainer`, which would wrap
+## and re-flow where the original never does.
+##
+## This builds the pane and all four sets. The original keeps them as four
+## `ButtonSet` children of one pane and swaps which is active, so they share
+## this pane and this grid and differ only in what is on them.
+func _build_bar() -> void:
+	_load_icons()
+	# Sized from the grid rather than the other way round: the original's widest
+	# set is thirteen columns, and the pane is drawn around whichever set is up.
+	_bar = PanelContainer.new()
+	_bar.position = Vector2(BAR_X, VIEW.y - BAR_Y)
+	_bar.custom_minimum_size = Vector2(BAR_COLS * BAR_SPACING + 36.0, BAR_SPACING * 2.0 + 16.0)
+	_bar.mouse_filter = Control.MOUSE_FILTER_PASS
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.13, 0.12, 0.20, 0.96)
+	style.set_corner_radius_all(8)
+	style.set_border_width_all(2)
+	style.border_color = Color(0.30, 0.80, 0.72)
+	style.set_content_margin_all(8)
+	_bar.add_theme_stylebox_override("panel", style)
+	add_child(_bar)
+
+	var field := Control.new()
+	field.custom_minimum_size = Vector2(BAR_COLS * BAR_SPACING, BAR_SPACING * 2.0)
+	field.mouse_filter = Control.MOUSE_FILTER_PASS
+	_bar.add_child(field)
+	_bar_field = field
+
+	for set_name in ["root", "face", "vowel", "backdrop"]:
+		var page := Control.new()
+		page.mouse_filter = Control.MOUSE_FILTER_PASS
+		field.add_child(page)
+		_sets[set_name] = page
+
+	_build_root_set()
+	_build_face_set()
+	_build_vowel_set()
+	_build_backdrop_set()
+	_activate_set("root")
+
+
+## The root menu: `Init` puts expressions, lipsyncing and backgrounds across the
+## first row, and studio, keybinds and help on the second.
+func _build_root_set() -> void:
+	var page: Control = _sets["root"]
+	# The three that have somewhere to go. The original's other three fire
+	# studio, keybind and help events, which have no ported equivalent yet.
+	_make_nav_button(page, "face", "expressions", 1, 0, "face")
+	_make_nav_button(page, "vowel", "lipsyncing", 2, 0, "vowel")
+	_make_nav_button(page, "background", "backgrounds", 3, 0, "backdrop")
+	_place_button(page, _make_icon_button("studio", "toggle studio"), 1, 1)
+	_place_button(page, _make_icon_button("key", "keybinds"), 11, 1)
+	_place_button(page, _make_icon_button("help", "help"), 12, 1)
+
+
+## A root-menu button that opens another set.
+func _make_nav_button(page: Control, icon_name: String, tooltip: String,
+		column: int, row: int, target: String) -> void:
+	var btn := _make_icon_button(icon_name, tooltip)
+	btn.pressed.connect(func() -> void: _activate_set(target))
+	_place_button(page, btn, column, row)
+
+
+## The face set: `MakeBackButton`, then the eight eye sets on row zero, the
+## eight mouth sets on row one, and blink at column ten.
+##
+## Each button's artwork is a miniature `Eyes` or `Mouth` at 0.4 or 1.5, drawn
+## from the same slices the rig itself uses rather than a separate icon.
+func _build_face_set() -> void:
+	var page: Control = _sets["face"]
+	_place_button(page, _make_back_button("face"), 0, 0)
+
+	var i := 0
+	for eye_set in EYE_SETS:
+		var btn := _make_part_button("Eye Set: " + eye_set)
+		_add_part_preview(btn,
+			rig.expression_texture(MikuRig.EYES_SYMBOL, eye_set, "open"), 0.4)
+		var eye_name: String = eye_set
+		btn.pressed.connect(func() -> void: rig.set_eye_set(eye_name))
+		_place_button(page, btn, i + 1, 0)
+		i += 1
+
+	i = 0
+	for mouth_set in MOUTH_MENU:
+		var btn := _make_part_button("Mouth Shape " + mouth_set)
+		_add_part_preview(btn,
+			rig.expression_texture(MikuRig.MOUTH_SYMBOL, mouth_set, "a"), 1.5)
+		var mouth_name: String = mouth_set
+		btn.pressed.connect(func() -> void: rig.set_mouth_set(mouth_name))
+		_place_button(page, btn, i + 1, 1)
+		i += 1
+
+	# Blink, which the original places at column ten rather than after the rows.
+	var blink := _make_icon_button("blink", "blink")
+	blink.pressed.connect(func() -> void: rig.set_eyes_closed(true))
+	_place_button(page, blink, 10, 0)
+
+
+## The vowel set: `MakeBackButton` then the eight vowel buttons. Each shows a
+## `Mouth` in that shape, except the last, which is the random-phase button and
+## uses an `Icon` because there is no single shape to draw for it.
+func _build_vowel_set() -> void:
+	var page: Control = _sets["vowel"]
+	_place_button(page, _make_back_button("vowel"), 0, 0)
+
+	var i := 0
+	for entry in VOWEL_BUTTONS:
+		var phase: String = entry[0]
+		var btn: Button
+		if phase == "?":
+			btn = _make_icon_button("random", "Random Mouth Shape")
+		else:
+			btn = _make_part_button("Mouth Shape " + entry[2])
+			_add_part_preview(btn,
+				rig.expression_texture(MikuRig.MOUTH_SYMBOL, "neutral", phase), 1.5)
+		btn.pressed.connect(func() -> void:
+			if phase == "?":
+				rig.set_mouth_phase("?")
+			else:
+				rig.stack_mouth(phase, true)
+				rig.stack_mouth(phase, false))
+		_place_button(page, btn, i + 1, 0)
+		i += 1
+
+
+## The backdrop set: `MakeBackButton`, the eight presets, and the four
+## custom-background buttons.
+func _build_backdrop_set() -> void:
+	var page: Control = _sets["backdrop"]
+	_place_button(page, _make_back_button("backdrop"), 0, 0)
+
+	# One thumbnail per preset, at columns one through eight. The original
+	# scales each `Backdrop` to 40/640 and windows it through a
+	# `scrollRect(70, 0, 500, 480)`, which crops the sides off rather than
+	# fitting the whole image; matching that keeps the thumbnails framed the way
+	# the original frames them instead of showing more of each backdrop.
+	var i := 0
+	for preset_name in _backdrop_names:
+		var entry: Dictionary = _backdrops[preset_name]
+		var tex: Texture2D = load(entry["file"])
+		if tex == null:
+			continue
+		var thumb := Button.new()
+		var idx := i
+		thumb.tooltip_text = "Background: " + preset_name
+		_apply_chrome(thumb)
+		thumb.pressed.connect(func() -> void: _set_backdrop(idx))
+		var pic := TextureRect.new()
+		pic.texture = tex
+		pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pic.position = Vector2(5, 7)
+		pic.size = Vector2(28, 26)
+		thumb.add_child(pic)
+		_place_button(page, thumb, i + 1, 0)
+		_thumbnails.append(thumb)
+		i += 1
+
+	# The original's four custom-background buttons, on the second row. `move`
+	# and `zoom` are `Cursors` frames scaled 1.5 rather than `Icon` frames --
+	# `UI_Pane_38.Init` builds those two from `Cursors` and leaves the rest on
+	# `Icon` -- so they are drawn from the other symbol at the original's scale.
+	_place_button(page, _make_icon_button("my_pictures", "my_pictures"), 1, 1)
+	_place_button(page, _make_cursor_button("move"), 2, 1)
+	_place_button(page, _make_cursor_button("zoom"), 3, 1)
+	_place_button(page, _make_icon_button("expand", "expand"), 4, 1)
+
+	_update_thumbnail_highlight()
+
+
+## `MakeBackButton`: every submenu's column-zero button returns to the root.
+func _make_back_button(_set_name: String) -> Control:
+	var btn := _make_icon_button("back", "back")
+	btn.pressed.connect(func() -> void: _activate_set("root"))
+	return btn
+
+
+## `ActivateSet`. The original cross-fades `presence` between sets and hides the
+## ones that are out; here the active one is simply shown.
+func _activate_set(set_name: String) -> void:
+	_active_set = set_name
+	for name in _sets:
+		_sets[name].visible = name == set_name
+
+
+## A chrome button with no icon of its own, for the sets whose artwork is a
+## miniature `Eyes` or `Mouth` rather than an `Icon` frame. `Make_EyesButton`
+## and `Make_VowelButton` build these as a `Button` with the part as its
+## `mLabel`, which is what `_add_part_preview` fills in.
+func _make_part_button(tooltip: String) -> Button:
+	var btn := Button.new()
+	btn.tooltip_text = tooltip
+	_apply_chrome(btn)
+	return btn
+
+
+## Puts a miniature expression slice inside a chrome button, as the original's
+## `mLabel`.
+##
+## The original scales these before handing them over -- 0.4 for an eye set, 1.5
+## for a mouth -- and the slice carries the offsets it had on the head, so both
+## are undone here: the scale is applied to the drawn size to get the same
+## relative size the original shows, then the result is fitted inside the chrome
+## rather than overflowing it. Fitting rather than clipping matters because a
+## mouth slice is wider than tall and the button is not square.
+func _add_part_preview(btn: Button, texture_path: String, part_scale: float) -> void:
+	if texture_path == "":
+		return
+	var pic := TextureRect.new()
+	pic.texture = load(texture_path)
+	pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# The original draws the part at its natural size times `part_scale`; inside
+	# a 38x40 button that only fits if the texture is fitted, so the scale is
+	# kept as a weight between the fitted size and the natural size.
+	var natural := pic.texture.get_size()
+	var fit := minf(28.0 / natural.x, 30.0 / natural.y) if natural.x > 0.0 else 1.0
+	var scale := minf(fit * part_scale * 2.0, 1.0)
+	pic.position = Vector2(19, 20) - natural * scale * 0.5
+	pic.size = natural * scale
+	btn.add_child(pic)
+
+
+## One of the backdrop set's `Cursors` buttons.
+##
+## The original scales these 1.5, which is what makes them read a little larger
+## than the `Icon` buttons beside them.
+func _make_cursor_button(cursor_name: String) -> Control:
+	var btn := _make_icon_button("", cursor_name)
+	var file: String = _icons.get("UI/Cursors", {}).get(cursor_name, "")
+	if file != "":
+		var tex: Texture2D = load(file)
+		var pic := TextureRect.new()
+		pic.texture = tex
+		pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# `cursor.scaleX = cursor.scaleY = 1.5`, inset to stay inside the chrome.
+		pic.position = Vector2(7, 8)
+		pic.size = Vector2(24, 24)
+		btn.add_child(pic)
+	return btn
+
+
+## Places a control on the `ButtonSet` grid, in the original's terms.
+##
+## `ButtonSet.Display` puts a button at `column * presence * SPACING +
+## SPACING / 2`, so the cell centre is half a spacing in from the origin and the
+## button is centred on it -- hence the -19 that takes a 38-wide button back to
+## its own top-left corner.
+func _place_button(parent: Control, node: Control, column: int, row: int) -> void:
+	node.position = Vector2(
+		column * BAR_SPACING + BAR_SPACING * 0.5 - 19.0,
+		row * BAR_SPACING + BAR_SPACING * 0.5 - 20.0)
+	parent.add_child(node)
+
+
+func _load_icons() -> void:
+	var file := FileAccess.open(MikuRig.RIG_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var data = JSON.parse_string(file.get_as_text())
+	file.close()
+	if typeof(data) != TYPE_DICTIONARY:
+		return
+	var frames = data.get("frames", {})
+	for symbol in frames:
+		var entry: Dictionary = {}
+		for label in frames[symbol]:
+			entry[label] = frames[symbol][label]["file"]
+		_icons[symbol] = entry
+
+
+## A button wearing the original's chrome.
+##
+## `Button.RefreshState` seeks to frame 1 (normal), 2 (hover or down) or 3 (both,
+## which also nudges the icon two pixels down), so the three textures are used
+## as button-state backgrounds and the icon is a child that shifts on press.
+func _make_icon_button(icon_name: String, tooltip: String) -> Control:
+	var btn := Button.new()
+	btn.tooltip_text = tooltip
+	_apply_chrome(btn)
+	var file: String = _icons.get("UI/Icon", {}).get(icon_name, "")
+	if file != "":
+		btn.icon = load(file)
+		btn.expand_icon = true
+	return btn
+
+
+## Gives a button the original's `UI/Button` artwork.
+##
+## Frame 3 is the only state carrying art in the .fla, and it is clean -- the
+## compiled SWF bakes `UI/keycode_display` into it, which is the bound-key
+## glyph `Button.OnRebind` draws at runtime rather than part of the chrome. So
+## all three states share it, and hover and press are a tint plus the original's
+## two-pixel nudge instead of separate artwork.
+func _apply_chrome(btn: Button) -> void:
+	btn.custom_minimum_size = Vector2(38, 40)
+	var f: String = _icons.get("UI/Button", {}).get("normal", "")
+	if f == "":
+		return
+	var base := StyleBoxTexture.new()
+	base.texture = load(f)
+	# Keep the rounded corners crisp and let the middle stretch.
+	base.texture_margin_left = 10
+	base.texture_margin_right = 10
+	base.texture_margin_top = 10
+	base.texture_margin_bottom = 10
+	base.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	base.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	btn.add_theme_stylebox_override("normal", base)
+	btn.add_theme_stylebox_override("focus", base)
+
+	var over := base.duplicate() as StyleBoxTexture
+	over.modulate_color = Color(1.25, 1.25, 1.25)
+	btn.add_theme_stylebox_override("hover", over)
+
+	var down := base.duplicate() as StyleBoxTexture
+	down.modulate_color = Color(0.92, 0.92, 0.92)
+	down.content_margin_top = 2
+	btn.add_theme_stylebox_override("pressed", down)
+
+
+## Lights the thumbnail for the backdrop in use.
+##
+## The original distinguishes it with the button's own keybind state rather than
+## a tint -- the selected preset's `Button` holds its key down -- so the chrome
+## is what brightens, not the picture inside it.
+func _update_thumbnail_highlight() -> void:
+	for i in _thumbnails.size():
+		var thumb := _thumbnails[i]
+		var lit := i == _backdrop_index
+		var f: String = _icons.get("UI/Button", {}).get("normal", "")
+		if f != "":
+			var box := StyleBoxTexture.new()
+			box.texture = load(f)
+			box.texture_margin_left = 10
+			box.texture_margin_right = 10
+			box.texture_margin_top = 10
+			box.texture_margin_bottom = 10
+			box.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+			box.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+			if lit:
+				box.modulate_color = Color(1.25, 1.25, 1.25)
+			thumb.add_theme_stylebox_override("normal", box)
+			thumb.add_theme_stylebox_override("focus", box)
+		for child in thumb.get_children():
+			if child is TextureRect:
+				child.modulate = Color(1, 1, 1) if lit else Color(0.88, 0.88, 0.92)
+
+
+func _toggle_bar() -> void:
+	if _bar != null:
+		_bar.visible = not _bar.visible
