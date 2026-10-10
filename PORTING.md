@@ -131,9 +131,17 @@ rendered as its own image rather than sliced like a composite.
 
 Four details matter:
 
-- **It covers, it does not contain.** `Autofit` scales by
-  `max(stage_w/img_w, stage_h/img_h)` and centres the overflow, so the edges are
-  cropped rather than letterboxed.
+- **The presets are drawn 1:1, not autofitted.** `Autofit` scales by
+  `max(stage_w/img_w, stage_h/img_h)` and centres the overflow — but it is only
+  called for a *user-loaded* image. `LoadBg` just seeks to the label, so the
+  bundled presets render at their authored size in symbol coordinates. Scaling
+  them to cover instead throws the character off every floor bar one, because
+  each preset has different content bounds.
+- **Place each preset by its symbol origin, not by centring.** Screen position
+  is `position + offset + texel * scale`, and a texel is `symbol - origin`, so
+  putting symbol coordinates at `symbol * scale` needs
+  `offset = origin * scale`. Parts need no such correction because they are
+  drawn unscaled; backdrops do, or they land off in a corner.
 - **Its `Miku` instance sits on a *guide* layer.** It is a placement reference
   and is never drawn, which is why these render correctly despite `Backdrop`
   being a composite — and why it must not be treated as a rig symbol. It is also

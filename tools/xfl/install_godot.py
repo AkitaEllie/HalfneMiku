@@ -84,6 +84,9 @@ def main():
             if not os.path.exists(rendered):
                 continue
             dest = os.path.join(bg_dir, "%s__%s.svg" % (stem, safe))
+            # Each preset is cropped to its own content, but every one keeps its
+            # own symbol-space origin, so placing each by that origin puts them
+            # all in register on the stage without a shared box.
             res = subprocess.run(
                 [sys.executable, os.path.join(HERE, "crop_svg.py"), rendered, dest],
                 check=True, capture_output=True, text=True)

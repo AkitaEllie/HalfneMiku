@@ -111,8 +111,9 @@ def content_bbox(root):
 
 
 def main():
-    if len(sys.argv) != 3:
-        raise SystemExit("usage: crop_svg.py <in.svg> <out.svg>")
+    if len(sys.argv) not in (3, 4):
+        raise SystemExit(
+            "usage: crop_svg.py <in.svg> <out.svg> [vx vy vw vh]")
     src, dst = sys.argv[1], sys.argv[2]
     tree = ET.parse(src)
     root = tree.getroot()
@@ -124,13 +125,17 @@ def main():
         if rect.get("x") in (None, "0") and rect.get("y") in (None, "0"):
             root.remove(rect)
 
-    bb = content_bbox(root)
-    if bb is None:
-        raise SystemExit(f"no geometry in {src}")
-
     pad = 1.0
-    vx, vy = bb[0] - pad, bb[1] - pad
-    vw, vh = bb[2] - bb[0] + pad * 2, bb[3] - bb[1] + pad * 2
+    if len(sys.argv) == 4:
+        # An explicit box, used when several renders must share one extent so
+        # they stay in register with each other.
+        vx, vy, vw, vh = (float(v) for v in sys.argv[3].split())
+    else:
+        bb = content_bbox(root)
+        if bb is None:
+            raise SystemExit(f"no geometry in {src}")
+        vx, vy = bb[0] - pad, bb[1] - pad
+        vw, vh = bb[2] - bb[0] + pad * 2, bb[3] - bb[1] + pad * 2
     root.set("viewBox", f"{vx:.4f} {vy:.4f} {vw:.4f} {vh:.4f}")
     root.set("width", f"{vw:.4f}")
     root.set("height", f"{vh:.4f}")

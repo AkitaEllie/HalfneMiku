@@ -20,6 +20,10 @@ var _run_rig := true
 const DEMO_MODE := true
 
 const VIEW := Vector2(800, 600)
+
+## The original's stage, which the backdrop and the guide-layer placement
+## reference are both authored against.
+const BACKDROP_STAGE := Vector2(640, 480)
 const GROUND_Y := 470.0
 
 ## Where the character stands, in stage coordinates.
@@ -112,18 +116,25 @@ func _build_stage() -> void:
 	_cycle_backdrop(0)
 
 
-## Fit a backdrop over the stage and centre it, the way `Backdrop.Autofit`
-## does: scale by max(stage/image) on each axis so it covers rather than
-## contains, then centre the overflow.
+## Place a backdrop at its authored size.
+##
+## `LoadBg` only does `gotoAndStop`, so the presets are drawn 1:1 in the
+## symbol's own coordinates — `Autofit` applies to user-loaded images, not to
+## these. Scaling to cover instead would zoom each preset by a different amount
+## and throw the character off every floor bar one.
 func _set_backdrop(index: int) -> void:
 	if _backdrop == null or _backdrop_names.is_empty():
 		return
 	_backdrop_index = posmod(index, _backdrop_names.size())
 	var entry: Dictionary = _backdrops[_backdrop_names[_backdrop_index]]
 	_backdrop.texture = load(entry["file"])
-	var size := Vector2(entry["size"][0], entry["size"][1])
-	_backdrop.scale = Vector2.ONE * maxf(VIEW.x / size.x, VIEW.y / size.y)
-	_backdrop.position = VIEW * 0.5
+	_backdrop.centered = false
+	_backdrop.scale = VIEW / BACKDROP_STAGE
+	# Screen = position + offset + texel * scale, and texel = symbol - origin, so
+	# placing symbol coordinates at symbol * scale needs offset = origin * scale.
+	# The parts need no such correction because they are drawn unscaled.
+	_backdrop.offset = Vector2(entry["origin"][0], entry["origin"][1]) * _backdrop.scale
+	_backdrop.position = Vector2.ZERO
 
 
 func _cycle_backdrop(step: int) -> void:
