@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://casdn7d0h4mcy"
-path="res://.godot/imported/Backdrop.svg-fb30a65e4443bab5a68139c1bbb35172.ctex"
+uid="uid://b3l2eb6mtcm3i"
+path="res://.godot/imported/Backdrop__concert_stage.svg-771a76df0e68db7a98b488349aed566b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/parts/Backdrop.svg"
-dest_files=["res://.godot/imported/Backdrop.svg-fb30a65e4443bab5a68139c1bbb35172.ctex"]
+source_file="res://assets/bg/Backdrop__concert_stage.svg"
+dest_files=["res://.godot/imported/Backdrop__concert_stage.svg-771a76df0e68db7a98b488349aed566b.ctex"]
 
 [params]
 

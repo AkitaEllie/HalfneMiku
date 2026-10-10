@@ -2,16 +2,6 @@
  "root": "Miku",
  "render": [
   {
-   "name": "Backdrop",
-   "leaf": false,
-   "ownShapes": 11,
-   "slots": [
-    -1,
-    5
-   ],
-   "stage": true
-  },
-  {
    "name": "Miku parts/Ahoge",
    "leaf": true,
    "ownShapes": 1,
@@ -302,22 +292,6 @@
     1
    ],
    "stage": false
-  },
-  {
-   "name": "backdrops/Negi bundle",
-   "leaf": true,
-   "ownShapes": 2,
-   "slots": [
-    -1
-   ],
-   "stage": true
-  },
-  {
-   "name": "backdrops/Negi row",
-   "leaf": false,
-   "ownShapes": 0,
-   "slots": [],
-   "stage": true
   }
  ],
  "rig": [
@@ -1512,36 +1486,105 @@
    }
   }
  },
- "stage": {},
- "parts": [
-  {
-   "id": "Backdrop",
-   "name": "Backdrop",
-   "file": "res://assets/parts/Backdrop.svg",
+ "stage": {
+  "concert stage": {
+   "file": "res://assets/bg/Backdrop__concert_stage.svg",
    "origin": [
     -151.5,
-    -1.0
+    -326.85
    ],
    "size": [
     934.85,
-    482.0
-   ],
-   "slot": -1
+    808.8
+   ]
   },
-  {
-   "id": "Backdrop__slot+5",
-   "name": "Backdrop",
-   "file": "res://assets/parts/Backdrop__slot+5.svg",
+  "wood stage": {
+   "file": "res://assets/bg/Backdrop__wood_stage.svg",
+   "origin": [
+    -144.75,
+    -38.7
+   ],
+   "size": [
+    919.65,
+    550.65
+   ]
+  },
+  "negi field": {
+   "file": "res://assets/bg/Backdrop__negi_field.svg",
+   "origin": [
+    -564.9445,
+    -109.35
+   ],
+   "size": [
+    1766.8162,
+    646.2099
+   ]
+  },
+  "miku miku": {
+   "file": "res://assets/bg/Backdrop__miku_miku.svg",
    "origin": [
     -111.0,
-    -58.0
+    -62.9176
+   ],
+   "size": [
+    929.1,
+    616.0176
+   ]
+  },
+  "desktop": {
+   "file": "res://assets/bg/Backdrop__desktop.svg",
+   "origin": [
+    -111.0,
+    -1.0
    ],
    "size": [
     862.0,
-    539.95
-   ],
-   "slot": 5
+    607.6
+   ]
   },
+  "attic": {
+   "file": "res://assets/bg/Backdrop__attic.svg",
+   "origin": [
+    -134.35,
+    -29.35
+   ],
+   "size": [
+    928.35,
+    540.65
+   ]
+  },
+  "park": {
+   "file": "res://assets/bg/Backdrop__park.svg",
+   "origin": [
+    -163.55,
+    -20.35
+   ],
+   "size": [
+    950.15,
+    511.4
+   ]
+  },
+  "blank": {
+   "file": "res://assets/bg/Backdrop__blank.svg",
+   "origin": [
+    -111.0,
+    -1.0
+   ],
+   "size": [
+    862.0,
+    482.0
+   ]
+  }
+ },
+ "placement": {
+  "x": 306.75,
+  "y": 373.3,
+  "stage": [
+   640,
+   480
+  ]
+ },
+ "parts": [
   {
    "id": "Miku parts_Ahoge",
    "name": "Miku parts/Ahoge",
@@ -1975,20 +2018,6 @@
     49.3
    ],
    "slot": 1
-  },
-  {
-   "id": "backdrops_Negi bundle",
-   "name": "backdrops/Negi bundle",
-   "file": "res://assets/parts/backdrops_Negi bundle.svg",
-   "origin": [
-    -54.6104,
-    -109.35
-   ],
-   "size": [
-    98.2768,
-    116.95
-   ],
-   "slot": -1
   },
   {
    "id": "Miku parts_Eyes__happy__open",

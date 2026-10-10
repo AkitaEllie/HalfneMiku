@@ -12,11 +12,12 @@ documented here; see the Godot docs for that.
 The character stands, follows the mouse, and animates its own hair and clothes
 via the ported spring physics. Art, rig and face are done.
 
-Ported: art extraction, the 36-clip rig, Swinger physics, mouse follow, and the
-face (8 eye sets with blink, 8 mouth sets with 7 vowels, held-vowel stack).
+Ported: art extraction, the 36-clip rig, Swinger physics, mouse follow, the
+face (8 eye sets with blink, 8 mouth sets with 7 vowels, held-vowel stack), and
+the eight backdrop presets.
 
-Not yet: audio, mouse recording/playback, the scrolling backdrop, and the
-timeline editor UI. See *Still to do*.
+Not yet: audio, mouse recording/playback, and the timeline editor UI. See
+*Still to do*.
 
 ## Layout
 
@@ -40,6 +41,7 @@ tools/              build scripts
     install_godot.py    copies assets into godot/
 
 godot/              the port itself
+  assets/bg/*.svg     the eight backdrop presets
 preview/             current renders only
 legacy/preview/      superseded demo captures from earlier iterations
 build/               export output, gitignored
@@ -119,6 +121,30 @@ frames that table names.
 the open `a` mouth. So `reference/reference_swf.png` — a JPEXS frame-1 render —
 shows an open mouth and the running app does not. The eye art, by contrast,
 matches the reference exactly, because `Eyes`' frame 1 *is* `happy`/open.
+
+## The backdrop is a timeline of presets, not a layer
+
+`Backdrop` is a symbol with eight labelled frames — `concert stage`,
+`wood stage`, `negi field`, `miku miku`, `desktop`, `attic`, `park`, `blank` —
+and `Backdrop.LoadBg` picks one by seeking to the label. So each preset is
+rendered as its own image rather than sliced like a composite.
+
+Four details matter:
+
+- **It covers, it does not contain.** `Autofit` scales by
+  `max(stage_w/img_w, stage_h/img_h)` and centres the overflow, so the edges are
+  cropped rather than letterboxed.
+- **Its `Miku` instance sits on a *guide* layer.** It is a placement reference
+  and is never drawn, which is why these render correctly despite `Backdrop`
+  being a composite — and why it must not be treated as a rig symbol. It is also
+  the authoritative answer to *where the character stands*: `(306.75, 373.3)` in
+  the original's 640x480 stage coordinates. Scale that to the viewport rather
+  than inventing a ground line, or she floats above the backdrops.
+- **A mask layer clips the art to y <= 480**, so sky shows beneath it. That is
+  in the original too, and is why the stage has a flat sky colour underneath
+  rather than being fully covered.
+- **It also accepts a user-supplied image** (`LoadData`), scaled the same way
+  and pannable/zoomable with the mouse. That path is not ported.
 
 ## Traps in the Flash formats
 
@@ -256,9 +282,6 @@ godot --headless --script scripts/dump_rig.gd     # every clip's rest bounds
   playback) plus the ease ramp that lets a recorded path blend back into live
   mouse control. The recorder itself is self-contained; only the transport
   behind it is not.
-- **Backdrop** — the scrolling layer (`scrollRect` at 40/640 scale). xfl2svg
-  mis-places composites, so the stage is flat sky. Its slices are extracted but
-  unused.
 - **Timeline editor UI** — and with it the real transport, key recording and
   audio sync.
 - **Enter** — bound to play/pause in the original; inert here until a transport

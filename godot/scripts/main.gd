@@ -37,6 +37,12 @@ var _record_every := 1
 var _shot := ""
 var _shot_frame := 0
 
+## Backdrop presets, keyed by name, and the sprite showing the current one.
+var _backdrops := {}
+var _backdrop_names: Array = []
+var _backdrop: Sprite2D
+var _backdrop_index := 0
+
 
 func _ready() -> void:
 	for args in OS.get_cmdline_user_args():
@@ -53,25 +59,75 @@ func _ready() -> void:
 
 	_build_stage()
 
-	# Place the character by its actual extents so the feet meet the ground and
-	# it sits centred, rather than relying on guessed magic numbers.
+	# Stand the character where the original puts her. `Backdrop` carries a
+	# guide-layer instance of Miku purely as a placement reference, and that
+	# spot is authored in the original's 640x480 stage coordinates -- so scale
+	# it to the viewport rather than guessing a ground line.
 	await get_tree().process_frame
-	var bounds: Rect2 = rig.get_rest_bounds()
-	rig.position = Vector2(
-		VIEW.x * 0.5 - bounds.get_center().x,
-		GROUND_Y - bounds.end.y
-	)
-	print("rig bounds=", bounds, " position=", rig.position)
+	var placement: Variant = _placement()
+	if placement != null:
+		rig.position = placement
+		print("rig position=", rig.position, " (from guide reference)")
+	else:
+		# Fall back to centring her by her actual extents.
+		var bounds: Rect2 = rig.get_rest_bounds()
+		rig.position = Vector2(
+			VIEW.x * 0.5 - bounds.get_center().x,
+			GROUND_Y - bounds.end.y
+		)
+		print("rig bounds=", bounds, " position=", rig.position)
+
+
+## Where the rig's origin belongs on screen, from the guide-layer reference.
+func _placement() -> Variant:
+	var file := FileAccess.open(MikuRig.RIG_PATH, FileAccess.READ)
+	if file == null:
+		return null
+	var data = JSON.parse_string(file.get_as_text())
+	file.close()
+	var spot = data.get("placement") if typeof(data) == TYPE_DICTIONARY else null
+	if spot == null:
+		return null
+	var stage := Vector2(spot["stage"][0], spot["stage"][1])
+	return Vector2(spot["x"], spot["y"]) * VIEW / stage
 
 
 func _build_stage() -> void:
-	# Flat sky for now. The original backdrop is a scrolling layer (scrollRect at
-	# 40/640 scale) and xfl2svg mis-places composite symbols, so it is not ported.
 	var sky := ColorRect.new()
 	sky.color = Color(0.36, 0.47, 0.66)
 	sky.size = VIEW
 	sky.z_index = -100
 	add_child(sky)
+
+	_backdrops = _load_stage()
+	if _backdrops.is_empty():
+		return
+	# The original picks a backdrop by seeking the Backdrop symbol to a labelled
+	# frame; the labels become these presets.
+	_backdrop_names = _backdrops.keys()
+	_backdrop = Sprite2D.new()
+	_backdrop.centered = true
+	_backdrop.z_index = -99
+	add_child(_backdrop)
+	_cycle_backdrop(0)
+
+
+## Fit a backdrop over the stage and centre it, the way `Backdrop.Autofit`
+## does: scale by max(stage/image) on each axis so it covers rather than
+## contains, then centre the overflow.
+func _set_backdrop(index: int) -> void:
+	if _backdrop == null or _backdrop_names.is_empty():
+		return
+	_backdrop_index = posmod(index, _backdrop_names.size())
+	var entry: Dictionary = _backdrops[_backdrop_names[_backdrop_index]]
+	_backdrop.texture = load(entry["file"])
+	var size := Vector2(entry["size"][0], entry["size"][1])
+	_backdrop.scale = Vector2.ONE * maxf(VIEW.x / size.x, VIEW.y / size.y)
+	_backdrop.position = VIEW * 0.5
+
+
+func _cycle_backdrop(step: int) -> void:
+	_set_backdrop(_backdrop_index + step)
 
 
 func _load_stage() -> Dictionary:
@@ -83,19 +139,6 @@ func _load_stage() -> Dictionary:
 	if typeof(data) != TYPE_DICTIONARY:
 		return {}
 	return data.get("stage", {})
-
-
-func _sprite(entry: Dictionary) -> Sprite2D:
-	var tex: Texture2D = load(entry["file"])
-	if tex == null:
-		return null
-	var s := Sprite2D.new()
-	s.texture = tex
-	s.centered = true
-	# The backdrop symbols are cropped like the parts, so shift by their origin
-	# to put the symbol's own origin on the node origin.
-	s.offset = -Vector2(entry["origin"][0], entry["origin"][1])
-	return s
 
 
 ## Map a stage position to the rig's control vector, as MainTimeline does.
@@ -202,6 +245,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		var step := 1 if event.keycode == KEY_BRACKETRIGHT else -1
 		_mouth_set_index = posmod(_mouth_set_index + step, MOUTH_SETS.size())
 		rig.set_mouth_set(MOUTH_SETS[_mouth_set_index])
+		get_viewport().set_input_as_handled()
+	elif event.keycode == KEY_B and event.pressed:
+		# The original cycles backdrops from the UI panel; there is no panel yet.
+		_cycle_backdrop(1)
 		get_viewport().set_input_as_handled()
 
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ck5hq0js4mrcg"
-path="res://.godot/imported/backdrops_Negi bundle.svg-59eca22c1b245c759aacb33893de983d.ctex"
+uid="uid://dhhwkv1ulk3ec"
+path="res://.godot/imported/Backdrop__attic.svg-9e16de860280829e85efd4b430133e09.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/parts/backdrops_Negi bundle.svg"
-dest_files=["res://.godot/imported/backdrops_Negi bundle.svg-59eca22c1b245c759aacb33893de983d.ctex"]
+source_file="res://assets/bg/Backdrop__attic.svg"
+dest_files=["res://.godot/imported/Backdrop__attic.svg-9e16de860280829e85efd4b430133e09.ctex"]
 
 [params]
 

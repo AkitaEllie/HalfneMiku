@@ -68,6 +68,31 @@ def main():
                 "slot": slot,
             })
 
+    # The incoming `stage` maps symbol -> labelled presets; the outgoing one
+    # maps preset name -> texture. Read the presets off `data` before
+    # overwriting it.
+    presets_by_symbol = data.get("stage", {})
+    stage = {}
+    bg_dir = os.path.join(godot, "assets", "bg")
+    shutil.rmtree(bg_dir, ignore_errors=True)
+    os.makedirs(bg_dir, exist_ok=True)
+    for name, presets in presets_by_symbol.items():
+        stem = name.replace("/", "_")
+        for preset in presets:
+            safe = preset["name"].replace("/", "_").replace(" ", "_")
+            rendered = os.path.join(work, "svg", "%s__%s.svg" % (stem, safe))
+            if not os.path.exists(rendered):
+                continue
+            dest = os.path.join(bg_dir, "%s__%s.svg" % (stem, safe))
+            res = subprocess.run(
+                [sys.executable, os.path.join(HERE, "crop_svg.py"), rendered, dest],
+                check=True, capture_output=True, text=True)
+            vx, vy, vw, vh = (float(x) for x in res.stdout.split())
+            stage[preset["name"]] = {
+                "file": "res://assets/bg/%s__%s.svg" % (stem, safe),
+                "origin": [vx, vy],
+                "size": [vw, vh],
+            }
     data["stage"] = stage
 
     # Expressions: one cropped texture per (set, phase), keyed by name so the

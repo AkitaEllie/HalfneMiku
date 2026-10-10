@@ -133,6 +133,27 @@ if rig.get("expressions"):
                     raise SystemExit(f"no frame {frame} of {name} (wanted {dest_stem})")
                 shutil.copy(src, os.path.join(out, dest_stem + ".svg"))
         print(f"  {name}: {len(wanted)} frames -> {last}")
+
+# The backdrop is a timeline of named presets. Render it once per labelled
+# frame. These are separate images rather than rig slices: they are stage art,
+# and the symbol also carries a guide-layer Miku reference that must not be
+# drawn.
+if rig.get("stage"):
+    for name, presets in rig["stage"].items():
+        stem = name.replace("/", "_")
+        last = max(p["frame"] for p in presets)
+        with tempfile.TemporaryDirectory() as tmp:
+            subprocess.run([tool, xfl, name, tmp, "--timeline-type", "symbol",
+                            "--first-frame", "1", "--last-frame", str(last),
+                            "--no-background"], check=True, capture_output=True)
+            for preset in presets:
+                src = os.path.join(tmp, "%s_%03d.svg" % (stem, preset["frame"]))
+                if not os.path.exists(src):
+                    raise SystemExit("no frame %d of %s (%s)" % (
+                        preset["frame"], name, preset["name"]))
+                safe = preset["name"].replace("/", "_").replace(" ", "_")
+                shutil.copy(src, os.path.join(out, "%s__%s.svg" % (stem, safe)))
+        print(f"  {name}: {len(presets)} stage presets -> {last}")
 PY
 
 echo "==> cropping and installing"

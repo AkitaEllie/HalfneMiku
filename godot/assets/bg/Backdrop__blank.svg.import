@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw6f1ko5t1sbp"
-path="res://.godot/imported/Backdrop__slot+5.svg-645a540233ba452fb107109cd9b2ea87.ctex"
+uid="uid://b4rakkw3a4s46"
+path="res://.godot/imported/Backdrop__blank.svg-d45bee017e9a5fb89af614305cd3a634.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/parts/Backdrop__slot+5.svg"
-dest_files=["res://.godot/imported/Backdrop__slot+5.svg-645a540233ba452fb107109cd9b2ea87.ctex"]
+source_file="res://assets/bg/Backdrop__blank.svg"
+dest_files=["res://.godot/imported/Backdrop__blank.svg-d45bee017e9a5fb89af614305cd3a634.ctex"]
 
 [params]
 

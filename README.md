@@ -27,11 +27,10 @@ Flash formats that will bite anyone extending it.
 ### Status
 
 Ported: the art pipeline, the 36-clip rig (attachments, lean, IK), the Swinger
-spring physics, mouse follow, and the face — 8 eye sets with blinking and 8 mouth
-sets with 7 vowels.
+spring physics, mouse follow, the face — 8 eye sets with blinking and 8 mouth
+sets with 7 vowels — and the eight backdrop presets.
 
-Not yet: audio, mouse recording/playback, the scrolling backdrop, and the
-timeline editor UI.
+Not yet: audio, mouse recording/playback, and the timeline editor UI.
 
 ### Quick start
 
@@ -60,7 +59,7 @@ renders a single frame, and `tools/build.sh debug` produces a debug build.
 Move the mouse to make Miku follow it. `X` blinks (hold). `A` `S` `W` `E` `D` `Q`
 are mouth vowels (hold; they stack, and releasing falls back to the last one
 held). `Space` picks a random vowel. `1`-`8` choose an eye set, `[` and `]`
-cycle mouth sets. `Escape` quits.
+cycle mouth sets, `B` cycles the backdrop. `Escape` quits — nothing else does.
 
 ### Layout
 

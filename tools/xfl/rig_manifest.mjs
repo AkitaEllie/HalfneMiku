@@ -115,12 +115,15 @@ function layersOf(sym) {
 // Each DOMFrame covers `duration` timeline frames starting at `index`.
 // XFL frames are sparse, so the index has to be honoured rather than counting
 // sibling elements -- Eyes draws 16 frames across a 45-frame timeline.
+// A frame span, plus the elements it holds. Used for guide-layer placement
+// references, where the whole point is to read an instance's matrix.
 function frameSpans(layer) {
   const frames = layer.children.find((c) => c.tag === "frames");
   if (!frames) return [];
   const out = [];
   for (const f of frames.children.filter((c) => c.tag === "DOMFrame")) {
     const start = num(f, "index", 0) + 1;
+    const els = f.children.find((c) => c.tag === "elements");
     out.push({
       start,
       end: start + num(f, "duration", 1) - 1,
@@ -128,8 +131,22 @@ function frameSpans(layer) {
       labelled: f.attrs.labelType === "name",
       // The label layer also carries an (empty) <elements>, so the presence of
       // the tag is not enough -- it has to actually hold something.
-      hasArt: !!f.children.find((c) => c.tag === "elements")?.children.length,
+      hasArt: !!els?.children.length,
+      els: els?.children,
     });
+  }
+  return out;
+}
+
+// The labelled frames of a symbol, in timeline order. `Backdrop` uses these to
+// pick out its eight named presets; `Eyes`/`Mouth` build expression tables
+// from them.
+function labelFrames(sym) {
+  const out = [];
+  for (const layer of layersOf(sym)) {
+    for (const span of frameSpans(layer)) {
+      if (span.labelled && span.name) out.push({ name: span.name, frame: span.start });
+    }
   }
   return out;
 }
@@ -256,13 +273,11 @@ function main() {
   seen.add(root);
   walk(root, "", 0);
 
-  // Symbols to render as textures: leaves referenced by the rig, plus the
-  // backdrop art used for the stage.
-  const stageSymbols = ["Backdrop", "backdrops/Negi row", "backdrops/Negi bundle"];
+  // Symbols to render as part textures: the leaves the rig references.
   const used = new Set(instances.map((i) => i.symbol));
   const render = [];
   for (const name of byName.keys()) {
-    if (!used.has(name) && !stageSymbols.includes(name)) continue;
+    if (!used.has(name)) continue;
     const sym = byName.get(name);
     const isLeaf = findAll(sym, "DOMSymbolInstance").length === 0;
     // Shapes belonging to this symbol itself, not to the clips it contains,
@@ -270,7 +285,39 @@ function main() {
     const allSlots = ownShapeSlots(sym);
     const ownShapes = allSlots.length;
     const slots = [...new Set(allSlots)].sort((a, b) => a - b);
-    render.push({ name, leaf: isLeaf, ownShapes, slots, stage: stageSymbols.includes(name) });
+    render.push({ name, leaf: isLeaf, ownShapes, slots, stage: false });
+  }
+
+  // The backdrop is a timeline of named presets rather than one picture, so it
+  // is rendered per labelled frame instead of being sliced like a composite.
+  // Its `Miku` instance sits on a guide layer and is never drawn, so these
+  // renders contain the backdrop only.
+  const stage = {};
+  const backdrop = byName.get("Backdrop");
+  if (backdrop) {
+    const presets = labelFrames(backdrop);
+    if (presets.length) stage["Backdrop"] = presets;
+  }
+
+  // Where the character is meant to stand. `Backdrop` carries a guide-layer
+  // instance of the character purely as a placement reference, and that is the
+  // author's intended spot on the 640x480 stage -- far more trustworthy than a
+  // hand-tuned constant, especially once a backdrop is drawn behind her.
+  let placement = null;
+  if (backdrop) {
+    // Guide layers are excluded everywhere else, so go looking directly.
+    for (const layer of findAll(backdrop, "DOMLayer")) {
+      if (layer.attrs.layerType !== "guide") continue;
+      for (const span of frameSpans(layer)) {
+        const els = span.els;
+        for (const el of els || []) {
+          if (el.tag !== "DOMSymbolInstance") continue;
+          if (el.attrs.libraryItemName !== rootName) continue;
+          const m = matrixOf(el);
+          placement = { x: m[4], y: m[5], stage: [640, 480] };
+        }
+      }
+    }
   }
 
   // Frame-based expressions, keyed by symbol. These are not part textures: the
@@ -286,11 +333,13 @@ function main() {
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
   fs.writeFileSync(
     outFile,
-    JSON.stringify({ root: rootName, render, rig: instances, expressions }, null, 1)
+    JSON.stringify({ root: rootName, render, rig: instances, expressions, stage, placement }, null, 1)
   );
   console.log(
     `rig: ${instances.length} instances, ${render.length} symbols to render, ` +
-      `${Object.keys(expressions).length} expression timelines`
+      `${Object.keys(expressions).length} expression timelines, ` +
+      `${Object.values(stage).flat().length} stage presets` +
+      (placement ? `, stage placement ${placement.x},${placement.y}` : '')
   );
 }
 
