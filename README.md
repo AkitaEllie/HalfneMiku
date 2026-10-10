@@ -28,21 +28,28 @@ Flash formats that will bite anyone extending it.
 
 Ported: the art pipeline, the 36-clip rig (attachments, lean, IK), the Swinger
 spring physics, mouse follow, the face — 8 eye sets with blinking and 8 mouth
-sets with 7 vowels — and the eight backdrop presets.
+sets with 7 vowels — and the eight backdrop presets. The character is vector
+throughout; the backdrops are currently PNG (see below).
 
-Not yet: audio, mouse recording/playback, and the timeline editor UI.
+Not yet: vector backdrops, audio, mouse recording/playback, and the timeline
+editor UI. See `PORTING.md`.
 
 ### Quick start
 
-Rebuild the art from the `.fla` (needs
-[xfl2svg](https://github.com/PluieElectrique/xfl2svg)):
+Rebuild the art from the `.fla`. This needs
+[xfl2svg](https://github.com/PluieElectrique/xfl2svg) for the character and a
+JPEXS/Free Flash Decompiler build for the backdrops:
 
 ```sh
 python3 -m venv .venv
 .venv/bin/pip install git+https://github.com/PluieElectrique/xfl2svg
-tools/xfl/extract.sh
+FFDEC=/path/to/ffdec.jar tools/xfl/extract.sh
 cd godot && godot --headless --import
 ```
+
+xfl2svg decodes geometry only, so it drops the gradients and filters the
+backdrops rely on; JPEXS is a full renderer and gets them. Without `FFDEC` the
+backdrops fall back to broken geometry.
 
 Then either run the project from the editor, or build a standalone binary:
 

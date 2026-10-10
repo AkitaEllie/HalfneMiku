@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://da7eu0pwo1cvf"
-path="res://.godot/imported/Backdrop__attic.svg-9e16de860280829e85efd4b430133e09.ctex"
+uid="uid://bot6e8xei0mbc"
+path="res://.godot/imported/Backdrop__park.png-b3dcbcc163f7d89afcac94ce33c86fa3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/bg/Backdrop__attic.svg"
-dest_files=["res://.godot/imported/Backdrop__attic.svg-9e16de860280829e85efd4b430133e09.ctex"]
+source_file="res://assets/bg/Backdrop__park.png"
+dest_files=["res://.godot/imported/Backdrop__park.png-b3dcbcc163f7d89afcac94ce33c86fa3.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

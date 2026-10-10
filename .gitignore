@@ -9,3 +9,10 @@ build/
 # Screenshots are captured into preview/ by tools/screenshot.sh, but the
 # editor's autosave copy is noise.
 preview/.*.autosave.kra
+
+# Python bytecode from running the extraction tools.
+__pycache__/
+*.pyc
+
+# Third-party tools used for verification, not part of the port.
+ruffle-*.tar.gz

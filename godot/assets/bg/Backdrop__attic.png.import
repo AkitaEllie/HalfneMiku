@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ds4vno8ppt7w5"
-path="res://.godot/imported/Backdrop__concert_stage.svg-771a76df0e68db7a98b488349aed566b.ctex"
+uid="uid://6syfgl53cttk"
+path="res://.godot/imported/Backdrop__attic.png-d8070d9b12e2f65c96ff52dcc17828be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/bg/Backdrop__concert_stage.svg"
-dest_files=["res://.godot/imported/Backdrop__concert_stage.svg-771a76df0e68db7a98b488349aed566b.ctex"]
+source_file="res://assets/bg/Backdrop__attic.png"
+dest_files=["res://.godot/imported/Backdrop__attic.png-d8070d9b12e2f65c96ff52dcc17828be.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

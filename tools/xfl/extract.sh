@@ -156,6 +156,47 @@ if rig.get("stage"):
         print(f"  {name}: {len(presets)} stage presets -> {last}")
 PY
 
+# The backdrop comes from JPEXS instead of xfl2svg.
+#
+# xfl2svg decodes geometry only. `Backdrop` uses 4 radial and 6 linear gradient
+# fills plus Flash filters, and the converter emits neither: the concert-stage
+# preset comes out with 1 gradient where the FLA has 4, losing the central
+# spotlight, the overhead lamps and the bloom around the light beams. JPEXS is
+# a full renderer and gets all of it. It also draws every preset on one
+# 1826x729 canvas -- the symbol's full extent -- so the frames are in register
+# with each other, which is what keeps the character standing on each floor.
+#
+# These land as PNG rather than SVG: that is the price of correct gradients.
+if [ -n "${FFDEC:-}" ] && [ -f "${FFDEC}" ]; then
+  echo "==> rendering backdrop presets with JPEXS"
+  rm -rf "$WORK/bg" && mkdir -p "$WORK/bg"
+  java -jar "$FFDEC" -export sprite "$WORK/bg" \
+    "$ROOT/reference/halfne_miku_studio_by_johnsu_d6k9vnu.swf" >/dev/null 2>&1 || true
+  DIR="$(find "$WORK/bg" -type d -name 'DefineSprite_*_Backdrop' | head -1)"
+  if [ -z "$DIR" ]; then
+    echo "could not find the exported Backdrop frames under $WORK/bg" >&2
+    exit 1
+  fi
+  # Frame N is the Nth label, i.e. the Nth preset in the manifest order.
+  i=1
+  python3 -c "
+import json,sys
+rig=json.load(open('$WORK/rig.json'))
+print('\n'.join(p['name'] for p in rig['stage']['Backdrop']))
+" | while read -r preset; do
+    src="$DIR/$i.png"
+    if [ -f "$src" ]; then
+      safe="$(printf '%s' "$preset" | tr '/' '_' | tr ' ' '_')"
+      cp "$src" "$WORK/svg/Backdrop__${safe}.png"
+    fi
+    i=$((i + 1))
+  done
+  echo "  copied $(ls "$WORK/svg"/Backdrop__*.png 2>/dev/null | wc -l) backdrop frames"
+else
+  echo "FFDEC not set -- skipping the JPEXS backdrop render" >&2
+  echo "set FFDEC=/path/to/ffdec.jar to get correct gradient and filter art" >&2
+fi
+
 echo "==> cropping and installing"
 python3 "$ROOT/tools/xfl/install_godot.py" "$WORK" "$ROOT/godot"
 

@@ -299,26 +299,22 @@ function main() {
     if (presets.length) stage["Backdrop"] = presets;
   }
 
-  // Where the character is meant to stand. `Backdrop` carries a guide-layer
-  // instance of the character purely as a placement reference, and that is the
-  // author's intended spot on the 640x480 stage -- far more trustworthy than a
-  // hand-tuned constant, especially once a backdrop is drawn behind her.
-  let placement = null;
-  if (backdrop) {
-    // Guide layers are excluded everywhere else, so go looking directly.
-    for (const layer of findAll(backdrop, "DOMLayer")) {
-      if (layer.attrs.layerType !== "guide") continue;
-      for (const span of frameSpans(layer)) {
-        const els = span.els;
-        for (const el of els || []) {
-          if (el.tag !== "DOMSymbolInstance") continue;
-          if (el.attrs.libraryItemName !== rootName) continue;
-          const m = matrixOf(el);
-          placement = { x: m[4], y: m[5], stage: [640, 480] };
-        }
-      }
+// Where the character goes on stage. The document's own root timeline instances
+// it at a=1.25, tx=383.45, ty=466.65 -- a scale that is easy to miss, since the
+// FLA's geometry and the rig matrices are all unscaled. Read it from there
+// rather than hardcoding, and use the document's stage size rather than
+// Backdrop.Autofit's legacy 640x480, which only applies to user-loaded images.
+let placement = null;
+const stageSize = [num(dom, "width", 800), num(dom, "height", 600)];
+for (const tl of findAll(dom, "DOMTimeline")) {
+  for (const layer of findAll(tl, "DOMLayer")) {
+    for (const inst of findAll(layer, "DOMSymbolInstance")) {
+      if (inst.attrs.libraryItemName !== rootName) continue;
+      const m = matrixOf(inst);
+      placement = { x: m[4], y: m[5], scale: [m[0], m[3]], stage: stageSize };
     }
   }
+}
 
   // Frame-based expressions, keyed by symbol. These are not part textures: the
   // rig picks one per state at runtime instead of baking a single frame.

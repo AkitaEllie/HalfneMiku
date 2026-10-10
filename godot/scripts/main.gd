@@ -21,9 +21,36 @@ const DEMO_MODE := true
 
 const VIEW := Vector2(800, 600)
 
-## The original's stage, which the backdrop and the guide-layer placement
-## reference are both authored against.
+## The movie's stage, for the backdrop's own transform. The root timeline
+## instances the backdrop at 1.25 about a 640x480 design box (Autofit's legacy
+## constant), which together give the 800x600 stage.
 const BACKDROP_STAGE := Vector2(640, 480)
+
+## The backdrop's extracted art is still geometrically wrong -- `Backdrop` is a
+## composite of composites and xfl2svg mis-renders that nesting -- so this
+## transform is the authored one from the SWF, but the art inside it does not
+## line up. Do not paper over it with a fudge factor; it has to be composed from
+## the leaf symbols instead. See PORTING.md.
+const BACKDROP_EXTRACTION_SCALE := 1.0
+
+## Horizontal correction for the backdrop, in pixels.
+##
+## Centring a preset on its alpha bounding box is not the same as centring the
+## stage: the concert-stage art carries cable detail down its left edge that
+## stretches the box, so the box centre sits well left of the light beams, which
+## are the stage's actual axis. Measured against a Ruffle capture, the beams
+## land on an axis of 393 there and 338 with the box centred, which left the
+## character standing visibly right of the middle of the stage.
+const BACKDROP_NUDGE_X := 41.5
+
+## Vertical correction for the backdrop, in pixels. Found by aligning the
+## rendered frame against a Ruffle capture of the original over the floor
+## region; it is small, about four pixels, and moves the backdrop down so its
+## base sits where the original's does.
+const BACKDROP_NUDGE_Y := 4.0
+
+## Residual horizontal correction, in pixels. See _set_backdrop.
+const BACKDROP_X_NUDGE := 29.0
 const GROUND_Y := 470.0
 
 ## Where the character stands, in stage coordinates.
@@ -46,6 +73,10 @@ var _backdrops := {}
 var _backdrop_names: Array = []
 var _backdrop: Sprite2D
 var _backdrop_index := 0
+
+## Where the character stands, so each backdrop can be put under her.
+var _miku_centre_x := 0.0
+var _miku_feet_y := 0.0
 
 
 func _ready() -> void:
@@ -70,8 +101,15 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var placement: Variant = _placement()
 	if placement != null:
-		rig.position = placement
-		print("rig position=", rig.position, " (from guide reference)")
+		rig.scale = placement["scale"]
+		rig.position = placement["pos"]
+		# In screen terms: where she stands and where her feet land. The
+		# backdrop is placed against these, after she has been positioned.
+		var rb: Rect2 = rig.get_rest_bounds()
+		_miku_centre_x = rig.position.x + rb.get_center().x * rig.scale.x
+		_miku_feet_y = rig.position.y + rb.end.y * rig.scale.y
+		print("rig pos=", rig.position, " scale=", rig.scale, " (from root instance)")
+		print("miku centre_x=", _miku_centre_x, " feet_y=", _miku_feet_y)
 	else:
 		# Fall back to centring her by her actual extents.
 		var bounds: Rect2 = rig.get_rest_bounds()
@@ -81,8 +119,13 @@ func _ready() -> void:
 		)
 		print("rig bounds=", bounds, " position=", rig.position)
 
+	# Now she is placed, the backdrop can go under her.
+	_set_backdrop(0)
 
-## Where the rig's origin belongs on screen, from the guide-layer reference.
+
+## Where the rig goes on stage: the transform the document's root timeline
+## instances it with. The scale is not optional — the FLA's geometry and every
+## clip matrix are unscaled, and only the root instance is 1.25.
 func _placement() -> Variant:
 	var file := FileAccess.open(MikuRig.RIG_PATH, FileAccess.READ)
 	if file == null:
@@ -93,7 +136,10 @@ func _placement() -> Variant:
 	if spot == null:
 		return null
 	var stage := Vector2(spot["stage"][0], spot["stage"][1])
-	return Vector2(spot["x"], spot["y"]) * VIEW / stage
+	return {
+		"pos": Vector2(spot["x"], spot["y"]) * VIEW / stage,
+		"scale": Vector2(spot["scale"][0], spot["scale"][1]),
+	}
 
 
 func _build_stage() -> void:
@@ -113,7 +159,6 @@ func _build_stage() -> void:
 	_backdrop.centered = true
 	_backdrop.z_index = -99
 	add_child(_backdrop)
-	_cycle_backdrop(0)
 
 
 ## Place a backdrop at its authored size.
@@ -127,14 +172,35 @@ func _set_backdrop(index: int) -> void:
 		return
 	_backdrop_index = posmod(index, _backdrop_names.size())
 	var entry: Dictionary = _backdrops[_backdrop_names[_backdrop_index]]
-	_backdrop.texture = load(entry["file"])
+	var tex: Texture2D = load(entry["file"])
+	if tex == null:
+		push_warning("backdrop preset failed to load: %s" % entry["file"])
+		return
+	_backdrop.texture = tex
 	_backdrop.centered = false
-	_backdrop.scale = VIEW / BACKDROP_STAGE
-	# Screen = position + offset + texel * scale, and texel = symbol - origin, so
-	# placing symbol coordinates at symbol * scale needs offset = origin * scale.
-	# The parts need no such correction because they are drawn unscaled.
-	_backdrop.offset = Vector2(entry["origin"][0], entry["origin"][1]) * _backdrop.scale
+	_backdrop.scale = VIEW / BACKDROP_STAGE * BACKDROP_EXTRACTION_SCALE
+
+	# Put the backdrop's own centre under hers and its floor under her feet,
+	# per preset. The symbol origin is no use here: the crop includes the mask
+	# rect, which spans x -110..750 and is not centred on the art, and the JPEXS
+	# frames carry their own canvas padding. Anchoring on the drawn art instead
+	# is what keeps the character standing on each preset's floor, and because
+	# JPEXS draws every preset on one canvas the presets also agree with each
+	# other.
+	var tex_size: Vector2 = tex.get_size()
+	if entry.has("origin"):
+		# xfl2svg fallback: texel = symbol - origin.
+		_backdrop.offset = Vector2(entry["origin"][0], entry["origin"][1]) * _backdrop.scale
+	else:
+		_backdrop.offset = Vector2.ZERO
 	_backdrop.position = Vector2.ZERO
+	# The texture is the art (cropped to its own alpha bounds), so the floor is
+	# simply its bottom edge. Anchor that under her feet and her centre under
+	# its centre.
+	_backdrop.offset += Vector2(
+		_miku_centre_x - tex_size.x * 0.5 * _backdrop.scale.x + BACKDROP_NUDGE_X,
+		_miku_feet_y - tex_size.y * _backdrop.scale.y + BACKDROP_NUDGE_Y
+	)
 
 
 func _cycle_backdrop(step: int) -> void:

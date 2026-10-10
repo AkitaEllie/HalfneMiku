@@ -14,6 +14,26 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
+def png_content_bbox(path):
+    """Alpha bounding box of a PNG, as (x0, y0, x1, y1). None if fully empty."""
+    try:
+        from PIL import Image
+    except ImportError:
+        return None
+    with Image.open(path) as im:
+        alpha = im.convert("RGBA").split()[3]
+        bb = alpha.getbbox()
+    return bb
+
+
+def crop_png(src, dst, bbox):
+    """Crop a PNG to `bbox` (x0, y0, x1, y1) and return the destination."""
+    from PIL import Image
+    with Image.open(src) as im:
+        im.crop(bbox).save(dst)
+    return dst
+
+
 def main():
     if len(sys.argv) != 3:
         raise SystemExit("usage: install_godot.py <workdir> <godot-root>")
@@ -71,8 +91,8 @@ def main():
     # The incoming `stage` maps symbol -> labelled presets; the outgoing one
     # maps preset name -> texture. Read the presets off `data` before
     # overwriting it.
-    presets_by_symbol = data.get("stage", {})
-    stage = {}
+    presets_by_symbol: dict = data.get("stage", {})
+    stage: dict = {}  # preset name -> texture descriptor
     bg_dir = os.path.join(godot, "assets", "bg")
     shutil.rmtree(bg_dir, ignore_errors=True)
     os.makedirs(bg_dir, exist_ok=True)
@@ -80,13 +100,32 @@ def main():
         stem = name.replace("/", "_")
         for preset in presets:
             safe = preset["name"].replace("/", "_").replace(" ", "_")
+            # JPEXS supplies the backdrop as PNG (correct gradients and
+            # filters, which xfl2svg silently drops). Fall back to the xfl2svg
+            # SVG only if FFDEC was not set at extract time.
+            png = os.path.join(work, "svg", "%s__%s.png" % (stem, safe))
+            if os.path.exists(png):
+                dest = os.path.join(bg_dir, "%s__%s.png" % (stem, safe))
+                entry = {"file": "res://assets/bg/%s__%s.png" % (stem, safe)}
+                bb = png_content_bbox(png)
+                if bb:
+                    # Crop to the art rather than shipping the padded canvas.
+                    # JPEXS draws every preset on the symbol's whole extent, so
+                    # the frames share a canvas but the art inside it is what
+                    # has to line up. Every preset but `blank` crops to the same
+                    # box, which is what keeps them registered with each other.
+                    crop_png(png, dest, bb)
+                    entry["size"] = [bb[2] - bb[0], bb[3] - bb[1]]
+                else:
+                    # `blank` is genuinely empty; ship it as-is so the preset
+                    # still resolves.
+                    shutil.copy(png, dest)
+                stage[preset["name"]] = entry
+                continue
             rendered = os.path.join(work, "svg", "%s__%s.svg" % (stem, safe))
             if not os.path.exists(rendered):
                 continue
             dest = os.path.join(bg_dir, "%s__%s.svg" % (stem, safe))
-            # Each preset is cropped to its own content, but every one keeps its
-            # own symbol-space origin, so placing each by that origin puts them
-            # all in register on the stage without a shared box.
             res = subprocess.run(
                 [sys.executable, os.path.join(HERE, "crop_svg.py"), rendered, dest],
                 check=True, capture_output=True, text=True)

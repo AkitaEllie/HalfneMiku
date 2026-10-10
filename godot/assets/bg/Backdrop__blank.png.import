@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4rakkw3a4s46"
-path="res://.godot/imported/Backdrop__blank.svg-d45bee017e9a5fb89af614305cd3a634.ctex"
+uid="uid://dg35v0fr2twoo"
+path="res://.godot/imported/Backdrop__blank.png-e79bd8e6afa383d4bf63554ceb371cf3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/bg/Backdrop__blank.svg"
-dest_files=["res://.godot/imported/Backdrop__blank.svg-d45bee017e9a5fb89af614305cd3a634.ctex"]
+source_file="res://assets/bg/Backdrop__blank.png"
+dest_files=["res://.godot/imported/Backdrop__blank.png-e79bd8e6afa383d4bf63554ceb371cf3.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

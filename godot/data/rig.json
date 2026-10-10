@@ -1488,100 +1488,68 @@
  },
  "stage": {
   "concert stage": {
-   "file": "res://assets/bg/Backdrop__concert_stage.svg",
-   "origin": [
-    -151.5,
-    -326.85
-   ],
+   "file": "res://assets/bg/Backdrop__concert_stage.png",
    "size": [
-    934.85,
-    808.8
+    861,
+    481
    ]
   },
   "wood stage": {
-   "file": "res://assets/bg/Backdrop__wood_stage.svg",
-   "origin": [
-    -144.75,
-    -38.7
-   ],
+   "file": "res://assets/bg/Backdrop__wood_stage.png",
    "size": [
-    919.65,
-    550.65
+    860,
+    480
    ]
   },
   "negi field": {
-   "file": "res://assets/bg/Backdrop__negi_field.svg",
-   "origin": [
-    -564.9445,
-    -109.35
-   ],
+   "file": "res://assets/bg/Backdrop__negi_field.png",
    "size": [
-    1766.8162,
-    646.2099
+    861,
+    481
    ]
   },
   "miku miku": {
-   "file": "res://assets/bg/Backdrop__miku_miku.svg",
-   "origin": [
-    -111.0,
-    -62.9176
-   ],
+   "file": "res://assets/bg/Backdrop__miku_miku.png",
    "size": [
-    929.1,
-    616.0176
+    860,
+    480
    ]
   },
   "desktop": {
-   "file": "res://assets/bg/Backdrop__desktop.svg",
-   "origin": [
-    -111.0,
-    -1.0
-   ],
+   "file": "res://assets/bg/Backdrop__desktop.png",
    "size": [
-    862.0,
-    607.6
+    860,
+    480
    ]
   },
   "attic": {
-   "file": "res://assets/bg/Backdrop__attic.svg",
-   "origin": [
-    -134.35,
-    -29.35
-   ],
+   "file": "res://assets/bg/Backdrop__attic.png",
    "size": [
-    928.35,
-    540.65
+    860,
+    480
    ]
   },
   "park": {
-   "file": "res://assets/bg/Backdrop__park.svg",
-   "origin": [
-    -163.55,
-    -20.35
-   ],
+   "file": "res://assets/bg/Backdrop__park.png",
    "size": [
-    950.15,
-    511.4
+    860,
+    480
    ]
   },
   "blank": {
-   "file": "res://assets/bg/Backdrop__blank.svg",
-   "origin": [
-    -111.0,
-    -1.0
-   ],
-   "size": [
-    862.0,
-    482.0
-   ]
+   "file": "res://assets/bg/Backdrop__blank.png"
   }
  },
  "placement": {
-  "x": 306.75,
-  "y": 373.3,
+  "x": 383.45,
+  "y": 466.65,
+  "scale": [
+   1.25,
+   1.25
+  ],
   "stage": [
-   640,
-   480
+   800,
+   600
   ]
  },
  "parts": [

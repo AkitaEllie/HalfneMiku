@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfcv474m0t3ht"
-path="res://.godot/imported/Backdrop__park.svg-06fb7722b853e2805727352b1dbc521e.ctex"
+uid="uid://bsltdj7x45gl4"
+path="res://.godot/imported/Backdrop__negi_field.png-efa5e5bbfa1109e27c92a1976ce959d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/bg/Backdrop__park.svg"
-dest_files=["res://.godot/imported/Backdrop__park.svg-06fb7722b853e2805727352b1dbc521e.ctex"]
+source_file="res://assets/bg/Backdrop__negi_field.png"
+dest_files=["res://.godot/imported/Backdrop__negi_field.png-efa5e5bbfa1109e27c92a1976ce959d3.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

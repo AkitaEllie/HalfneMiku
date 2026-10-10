@@ -14,10 +14,11 @@ via the ported spring physics. Art, rig and face are done.
 
 Ported: art extraction, the 36-clip rig, Swinger physics, mouse follow, the
 face (8 eye sets with blink, 8 mouth sets with 7 vowels, held-vowel stack), and
-the eight backdrop presets.
+the eight backdrop presets — though those are PNG rather than vector, which is
+the next thing on the list.
 
-Not yet: audio, mouse recording/playback, and the timeline editor UI. See
-*Still to do*.
+Not yet: vector backdrops, audio, mouse recording/playback, and the timeline
+editor UI. See *Still to do*.
 
 ## Layout
 
@@ -27,6 +28,8 @@ reference/          originals and ground truth. Never edit these.
   *.swf               the compiled original, used to verify geometry and
                       behaviour (JPEXS reads its display lists and scripts)
   reference_swf.png   JPEXS render of the whole character, 274x263 tight-cropped
+  concert_stage.png   Ruffle capture of the running original, concert stage
+  negi_field.png      ditto, negi field -- ground truth for placement
   DV.gif              the original animation, for eyeballing motion
   as3/                the ActionScript helper classes shipped inside the .fla
 
@@ -122,6 +125,13 @@ the open `a` mouth. So `reference/reference_swf.png` — a JPEXS frame-1 render 
 shows an open mouth and the running app does not. The eye art, by contrast,
 matches the reference exactly, because `Eyes`' frame 1 *is* `happy`/open.
 
+**The character is instanced at 1.25 on the root timeline.** The FLA's geometry,
+every clip matrix and the whole rig are unscaled; the only place the scale
+appears is the document's root timeline, which instances `Miku` with
+`a=1.25, tx=383.45, ty=466.65`. Miss it and she renders about a third too small
+and mispositioned against the backdrop. `rig_manifest.mjs` reads that instance
+into `rig.json` as `placement`; do not hand-tune a ground line instead.
+
 ## The backdrop is a timeline of presets, not a layer
 
 `Backdrop` is a symbol with eight labelled frames — `concert stage`,
@@ -137,22 +147,55 @@ Four details matter:
   bundled presets render at their authored size in symbol coordinates. Scaling
   them to cover instead throws the character off every floor bar one, because
   each preset has different content bounds.
-- **Place each preset by its symbol origin, not by centring.** Screen position
-  is `position + offset + texel * scale`, and a texel is `symbol - origin`, so
-  putting symbol coordinates at `symbol * scale` needs
-  `offset = origin * scale`. Parts need no such correction because they are
-  drawn unscaled; backdrops do, or they land off in a corner.
-- **Its `Miku` instance sits on a *guide* layer.** It is a placement reference
-  and is never drawn, which is why these render correctly despite `Backdrop`
-  being a composite — and why it must not be treated as a rig symbol. It is also
-  the authoritative answer to *where the character stands*: `(306.75, 373.3)` in
-  the original's 640x480 stage coordinates. Scale that to the viewport rather
-  than inventing a ground line, or she floats above the backdrops.
+- **Place each preset on the character, not by its symbol origin.** The symbol
+  origin is not usable: the crop includes the mask rect, which spans x -110..750
+  and is not centred on the art. `main.gd` instead puts the art's centre under
+  hers and its bottom edge under her feet.
+- **Its `Miku` instance sits on a *guide* layer**, so it is never drawn — which
+  is why these render correctly despite `Backdrop` being a composite, and why it
+  must not be treated as a rig symbol. It is also a placement reference, but a
+  misleading one: it reads `(306.75, 373.3)`, which is the root instance's
+  position *before* the 1.25 scale. Take the transform from the root instance.
 - **A mask layer clips the art to y <= 480**, so sky shows beneath it. That is
   in the original too, and is why the stage has a flat sky colour underneath
   rather than being fully covered.
 - **It also accepts a user-supplied image** (`LoadData`), scaled the same way
   and pannable/zoomable with the mouse. That path is not ported.
+
+### The backdrop comes from JPEXS, not xfl2svg
+
+The transform is the root timeline's — `Backdrop` is instanced at 1.25 about a
+640x480 box — but **the art has to be rendered by JPEXS**. xfl2svg decodes
+geometry only: `Backdrop` uses 4 radial and 6 linear gradient fills plus Flash
+filters, and the concert-stage preset came out with *one* gradient where the FLA
+has four. The central spotlight, the overhead lamps and the bloom around the
+light beams were all simply absent.
+
+JPEXS is a full renderer and gets all of it. It also draws every preset on one
+1826x729 canvas — the symbol's whole extent — so the frames are in register with
+each other, which is what keeps the character standing on each floor rather than
+somewhere different per preset.
+
+Set `FFDEC=/path/to/ffdec.jar` when running `extract.sh`, or the backdrop falls
+back to xfl2svg's broken geometry.
+
+These land as **PNG, not SVG** — that is the price of correct gradients. The
+character itself stays vector. Frames are cropped to their alpha bounds at
+install time; every preset but `blank` crops to the same box, so they line up.
+`main.gd` then anchors each one on the character: her centre under the art's
+centre, her feet under its bottom edge.
+
+One caveat on that: an alpha bounding box is not a stage's optical centre. The
+concert-stage art carries cable detail down its left edge, so the box centre
+sits left of the light beams, which are the real axis — leaving the character
+visibly right of the middle of the stage. `BACKDROP_NUDGE_X` corrects it,
+measured against the Ruffle capture (the beams land on an axis of 393 there and
+390 with the box centred), and `BACKDROP_NUDGE_Y` moves the base down by four
+pixels, found by aligning the rendered frame against the capture over the floor
+region. Both are small empirical corrections on top of the authored transform,
+and both are the sort of thing to revisit if the backdrop is ever redrawn.
+
+The user-supplied image path (`LoadData`, pannable and zoomable) is not ported.
 
 ## Traps in the Flash formats
 
@@ -281,6 +324,20 @@ godot --headless --script scripts/dump_rig.gd     # every clip's rest bounds
 
 ## Still to do
 
+- **Vector backdrops.** They are PNG now because xfl2svg cannot render
+  gradients or filters, and JPEXS's sprite export rasterises. The character is
+  still vector, so the backdrop is the one part of the picture that does not
+  scale cleanly. Getting these back to vector is the goal; the paths, cheapest
+  first:
+  - Find or write an XFL-to-SVG path that carries `<RadialGradient>` and
+    `<LinearGradient>` fills and Flash filters through. The fills are all in the
+    XFL already, so this is a converter problem, not a data problem.
+  - Or have JPEXS export SVG rather than sprite PNGs, if it will.
+  - Or rasterise only the gradient-filled shapes and keep the ~129 own shapes
+    vector, compositing the two layers.
+  Whatever route it takes, the placement should end up derived rather than
+  nudged — `BACKDROP_NUDGE_X` and `_Y` exist only because the current art
+  arrives pre-distorted.
 - **Audio** — there is none to port: the SWF has no sound tags and the `.fla`
   no media. The feature is loading a *user-supplied* MP3 and playing it in sync
   with the timeline (`Timeline.mSound`, `mFileRef`), which is the "pretend Miku

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1q2th1sxmj7m"
-path="res://.godot/imported/Backdrop__desktop.svg-73cf38f226562c3d9a56e3a5b78d22ab.ctex"
+uid="uid://b0bdw026dkrbl"
+path="res://.godot/imported/Backdrop__wood_stage.png-9df05ccad73d4ab25874b2ccd3be96bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/bg/Backdrop__desktop.svg"
-dest_files=["res://.godot/imported/Backdrop__desktop.svg-73cf38f226562c3d9a56e3a5b78d22ab.ctex"]
+source_file="res://assets/bg/Backdrop__wood_stage.png"
+dest_files=["res://.godot/imported/Backdrop__wood_stage.png-9df05ccad73d4ab25874b2ccd3be96bf.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
