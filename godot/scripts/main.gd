@@ -110,6 +110,15 @@ const BAR_BORDER := 2.0
 ## original draws it larger than that: measured off the captures, a button
 ## occupies 42x40 on the grid.
 const BAR_BUTTON := Vector2(42, 40)
+## The room a plain `Icon` gets inside the chrome. The original passes the icon
+## to `Button.Init` as an `mLabel` and draws it at its own size, inset from the
+## chrome rather than filling it; measured off the root capture it covers about
+## 24x22 of the button.
+const BAR_ICON_BOX := Vector2(24, 22)
+## The room an `Eyes` or `Mouth` preview gets, also off the captures. A mouth is
+## wider than an eye set, as it is in the original.
+const BAR_PART_EYE := Vector2(26, 20)
+const BAR_PART_MOUTH := Vector2(30, 20)
 var _icons: Dictionary = {}
 var _thumbnails: Array[Button] = []
 
@@ -505,7 +514,7 @@ func _build_face_set() -> void:
 	for eye_set in EYE_SETS:
 		var btn := _make_part_button("Eye Set: " + eye_set)
 		_add_part_preview(btn,
-			rig.expression_texture(MikuRig.EYES_SYMBOL, eye_set, "open"), 0.8)
+			rig.expression_texture(MikuRig.EYES_SYMBOL, eye_set, "open"), BAR_PART_EYE)
 		var eye_name: String = eye_set
 		btn.pressed.connect(func() -> void: rig.set_eye_set(eye_name))
 		_place_button(page, btn, i + 1, 0)
@@ -515,7 +524,7 @@ func _build_face_set() -> void:
 	for mouth_set in MOUTH_MENU:
 		var btn := _make_part_button("Mouth Shape " + mouth_set)
 		_add_part_preview(btn,
-			rig.expression_texture(MikuRig.MOUTH_SYMBOL, mouth_set, "a"), 0.72)
+			rig.expression_texture(MikuRig.MOUTH_SYMBOL, mouth_set, "a"), BAR_PART_MOUTH)
 		var mouth_name: String = mouth_set
 		btn.pressed.connect(func() -> void: rig.set_mouth_set(mouth_name))
 		_place_button(page, btn, i + 1, 1)
@@ -546,7 +555,7 @@ func _build_vowel_set() -> void:
 		else:
 			btn = _make_part_button("Mouth Shape " + entry[2])
 			_add_part_preview(btn,
-				rig.expression_texture(MikuRig.MOUTH_SYMBOL, "neutral", phase), 0.72)
+				rig.expression_texture(MikuRig.MOUTH_SYMBOL, "neutral", phase), BAR_PART_MOUTH)
 			# A vowel button is a hold, not a click. `Make_VowelButton` passes
 			# the key-down state through as `start` and releases on key-up, so the
 			# shape is held for as long as the button is down. Firing it on
@@ -587,6 +596,9 @@ func _build_backdrop_set() -> void:
 		pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		pic.position = Vector2((BAR_BUTTON.x - 28.0) * 0.5, (BAR_BUTTON.y - 26.0) * 0.5)
 		pic.size = Vector2(28, 26)
+		# `Make_BackdropButton` filters its `Backdrop` the same way the eye and
+		# mouth buttons filter theirs.
+		_add_drop_shadow(thumb, pic)
 		thumb.add_child(pic)
 		_place_button(page, thumb, i + 1, 0)
 		_thumbnails.append(thumb)
@@ -639,7 +651,8 @@ func _make_part_button(tooltip: String) -> Button:
 ## do not transfer. What the original's buttons actually show is the shape
 ## filling most of the chrome, which is what `fill` reproduces: near-full for a
 ## mouth, slightly less for an eye set, which reads a touch smaller.
-func _add_part_preview(btn: Button, texture_path: String, fill: float) -> void:
+func _add_part_preview(btn: Button, texture_path: String, box: Vector2,
+		shadow: bool = true) -> void:
 	if texture_path == "":
 		return
 	var pic := TextureRect.new()
@@ -650,16 +663,43 @@ func _add_part_preview(btn: Button, texture_path: String, fill: float) -> void:
 	var natural := pic.texture.get_size()
 	if natural.x <= 0.0 or natural.y <= 0.0:
 		return
-	# Fill the chrome, inset for the border. The caller's scale sets how much of
-	# that room the shape takes, which keeps an eye set reading smaller than a
-	# mouth the way 0.4 against 1.5 does in the original.
-	var inset := 8.0
-	var room := BAR_BUTTON - Vector2(inset, inset)
-	var fit := minf(room.x / natural.x, room.y / natural.y)
-	var size := natural * fit * fill
+	# Fit the slice to `box` and centre it in the chrome. `box` is the measured
+	# size the original draws the part at, not a scale: the 0.4 and 1.5 in the
+	# source are of the part as it sits on the full-size head and do not transfer
+	# to a cropped slice.
+	var fit := minf(box.x / natural.x, box.y / natural.y)
+	var size := natural * fit
 	pic.position = BAR_BUTTON * 0.5 - size * 0.5
 	pic.size = size
+	if shadow:
+		_add_drop_shadow(btn, pic)
 	btn.add_child(pic)
+
+
+## Puts the soft shadow the original puts on a button's contents under it.
+##
+## `Make_EyesButton`, `Make_VowelButton` and `Make_BackdropButton` each set
+## `filters = [new DropShadowFilter(2, 45, 0, 0.5, 8, 8, 1)]` on the part they
+## hand to `Button.Init` -- distance 2 at 45 degrees, black at half alpha,
+## blurred. The plain `Icon` buttons get no filter, which is why the root menu
+## sits flat while the face and backdrop sets do not.
+##
+## Godot has no per-`TextureRect` filter, so this fakes it with the texture
+## repeated behind itself at descending alpha, which is enough to read as a soft
+## shadow at button size.
+func _add_drop_shadow(btn: Button, pic: TextureRect) -> void:
+	var offset := Vector2(1.4, 1.4)
+	for i in 3:
+		var shade := TextureRect.new()
+		shade.texture = pic.texture
+		shade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		shade.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		shade.position = pic.position + offset * float(3 - i)
+		shade.size = pic.size
+		shade.modulate = Color(0, 0, 0, 0.16)
+		btn.add_child(shade)
+		btn.move_child(shade, btn.get_child_count() - 2)
 
 
 ## One of the backdrop set's `Cursors` buttons.
@@ -723,8 +763,12 @@ func _make_icon_button(icon_name: String, tooltip: String) -> Control:
 	_apply_chrome(btn)
 	var file: String = _icons.get("UI/Icon", {}).get(icon_name, "")
 	if file != "":
-		btn.icon = load(file)
-		btn.expand_icon = true
+		# The original passes the icon to `Button.Init` as an `mLabel` and draws
+		# it at its own size, inset inside the chrome rather than filling it.
+		# `Button.icon` either keeps the natural size -- which for these cropped
+		# slices is far larger than the button -- or stretches across it, so the
+		# icon is placed as a child instead and sized to the measured box.
+		_add_part_preview(btn, file, BAR_ICON_BOX, false)
 	return btn
 
 
