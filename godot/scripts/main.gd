@@ -88,11 +88,20 @@ const BAR_SPACING := 45.0
 ## column eight, but the root menu reaches twelve, so the pane is drawn wide
 ## enough for the widest set the way the original's shared pane is.
 const BAR_COLS := 13
-## Where the pane sits. The original eases it to y 500 in `Update` and shifts
-## it in from the left by `presence * 10 - 5`; this is that settled position on
-## an 800x600 stage.
-const BAR_X := 82.0
-const BAR_Y := 76.0
+## Where the pane sits, measured off the four cropped captures of the original's
+## sets, which all agree on 606x107. The stage is 800x600 and the pane sits
+## against the bottom of it.
+const BAR_LEFT := 94.0
+const BAR_BOTTOM := 10.0
+## The pane's fixed size. All four set captures measure the same box, so the
+## original's pane does not resize to whichever set is up -- it is one size with
+## the sets paging inside it.
+const BAR_WIDTH := 606.0
+const BAR_HEIGHT := 107.0
+## A button's own size. The chrome art is 38x38 at its native scale, but the
+## original draws it larger than that: measured off the captures, a button
+## occupies 42x40 on the grid.
+const BAR_BUTTON := Vector2(42, 40)
 var _icons: Dictionary = {}
 var _thumbnails: Array[Button] = []
 
@@ -415,15 +424,16 @@ func _build_bar() -> void:
 	_load_icons()
 	# Sized from the grid rather than the other way round: the original's widest
 	# set is thirteen columns, and the pane is drawn around whichever set is up.
+	# 615 wide by 107 tall, again off the capture.
 	_bar = PanelContainer.new()
-	_bar.position = Vector2(BAR_X, VIEW.y - BAR_Y)
-	_bar.custom_minimum_size = Vector2(BAR_COLS * BAR_SPACING + 36.0, BAR_SPACING * 2.0 + 16.0)
+	_bar.position = Vector2(BAR_LEFT, VIEW.y - BAR_BOTTOM - BAR_HEIGHT)
+	_bar.custom_minimum_size = Vector2(BAR_WIDTH, BAR_HEIGHT)
 	_bar.mouse_filter = Control.MOUSE_FILTER_PASS
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.13, 0.12, 0.20, 0.96)
 	style.set_corner_radius_all(8)
 	style.set_border_width_all(2)
-	style.border_color = Color(0.30, 0.80, 0.72)
+	style.border_color = Color(1, 1, 1)
 	style.set_content_margin_all(8)
 	_bar.add_theme_stylebox_override("panel", style)
 	add_child(_bar)
@@ -431,6 +441,9 @@ func _build_bar() -> void:
 	var field := Control.new()
 	field.custom_minimum_size = Vector2(BAR_COLS * BAR_SPACING, BAR_SPACING * 2.0)
 	field.mouse_filter = Control.MOUSE_FILTER_PASS
+	# The pane is taller than the two rows of buttons it holds, and the original
+	# centres them in it rather than stacking them against its top edge.
+	field.position = Vector2(0, (BAR_HEIGHT - 16.0 - field.custom_minimum_size.y) * 0.5)
 	_bar.add_child(field)
 	_bar_field = field
 
@@ -482,7 +495,7 @@ func _build_face_set() -> void:
 	for eye_set in EYE_SETS:
 		var btn := _make_part_button("Eye Set: " + eye_set)
 		_add_part_preview(btn,
-			rig.expression_texture(MikuRig.EYES_SYMBOL, eye_set, "open"), 0.4)
+			rig.expression_texture(MikuRig.EYES_SYMBOL, eye_set, "open"), 0.8)
 		var eye_name: String = eye_set
 		btn.pressed.connect(func() -> void: rig.set_eye_set(eye_name))
 		_place_button(page, btn, i + 1, 0)
@@ -492,7 +505,7 @@ func _build_face_set() -> void:
 	for mouth_set in MOUTH_MENU:
 		var btn := _make_part_button("Mouth Shape " + mouth_set)
 		_add_part_preview(btn,
-			rig.expression_texture(MikuRig.MOUTH_SYMBOL, mouth_set, "a"), 1.5)
+			rig.expression_texture(MikuRig.MOUTH_SYMBOL, mouth_set, "a"), 0.72)
 		var mouth_name: String = mouth_set
 		btn.pressed.connect(func() -> void: rig.set_mouth_set(mouth_name))
 		_place_button(page, btn, i + 1, 1)
@@ -516,17 +529,21 @@ func _build_vowel_set() -> void:
 		var phase: String = entry[0]
 		var btn: Button
 		if phase == "?":
+			# The random button picks a phase outright rather than holding one,
+			# so it stays on `pressed` -- there is nothing to release.
 			btn = _make_icon_button("random", "Random Mouth Shape")
+			btn.pressed.connect(func() -> void: rig.set_mouth_phase("?"))
 		else:
 			btn = _make_part_button("Mouth Shape " + entry[2])
 			_add_part_preview(btn,
-				rig.expression_texture(MikuRig.MOUTH_SYMBOL, "neutral", phase), 1.5)
-		btn.pressed.connect(func() -> void:
-			if phase == "?":
-				rig.set_mouth_phase("?")
-			else:
-				rig.stack_mouth(phase, true)
-				rig.stack_mouth(phase, false))
+				rig.expression_texture(MikuRig.MOUTH_SYMBOL, "neutral", phase), 0.72)
+			# A vowel button is a hold, not a click. `Make_VowelButton` passes
+			# the key-down state through as `start` and releases on key-up, so the
+			# shape is held for as long as the button is down. Firing it on
+			# `pressed` instead would push the phase and pop it in the same
+			# frame, leaving the mouth exactly as it started.
+			btn.button_down.connect(func() -> void: rig.stack_mouth(phase, true))
+			btn.button_up.connect(func() -> void: rig.stack_mouth(phase, false))
 		_place_button(page, btn, i + 1, 0)
 		i += 1
 
@@ -558,7 +575,7 @@ func _build_backdrop_set() -> void:
 		pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		pic.position = Vector2(5, 7)
+		pic.position = Vector2((BAR_BUTTON.x - 28.0) * 0.5, (BAR_BUTTON.y - 26.0) * 0.5)
 		pic.size = Vector2(28, 26)
 		thumb.add_child(pic)
 		_place_button(page, thumb, i + 1, 0)
@@ -606,13 +623,13 @@ func _make_part_button(tooltip: String) -> Button:
 ## Puts a miniature expression slice inside a chrome button, as the original's
 ## `mLabel`.
 ##
-## The original scales these before handing them over -- 0.4 for an eye set, 1.5
-## for a mouth -- and the slice carries the offsets it had on the head, so both
-## are undone here: the scale is applied to the drawn size to get the same
-## relative size the original shows, then the result is fitted inside the chrome
-## rather than overflowing it. Fitting rather than clipping matters because a
-## mouth slice is wider than tall and the button is not square.
-func _add_part_preview(btn: Button, texture_path: String, part_scale: float) -> void:
+## `Make_EyesButton` scales an `Eyes` to 0.4 and `Make_VowelButton` a `Mouth` to
+## 1.5, and hands the result to `Button.Init` as the label -- but those are scales
+## of the part as it sits on the full-size head, not of a cropped slice, so they
+## do not transfer. What the original's buttons actually show is the shape
+## filling most of the chrome, which is what `fill` reproduces: near-full for a
+## mouth, slightly less for an eye set, which reads a touch smaller.
+func _add_part_preview(btn: Button, texture_path: String, fill: float) -> void:
 	if texture_path == "":
 		return
 	var pic := TextureRect.new()
@@ -620,14 +637,18 @@ func _add_part_preview(btn: Button, texture_path: String, part_scale: float) -> 
 	pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# The original draws the part at its natural size times `part_scale`; inside
-	# a 38x40 button that only fits if the texture is fitted, so the scale is
-	# kept as a weight between the fitted size and the natural size.
 	var natural := pic.texture.get_size()
-	var fit := minf(28.0 / natural.x, 30.0 / natural.y) if natural.x > 0.0 else 1.0
-	var scale := minf(fit * part_scale * 2.0, 1.0)
-	pic.position = Vector2(19, 20) - natural * scale * 0.5
-	pic.size = natural * scale
+	if natural.x <= 0.0 or natural.y <= 0.0:
+		return
+	# Fill the chrome, inset for the border. The caller's scale sets how much of
+	# that room the shape takes, which keeps an eye set reading smaller than a
+	# mouth the way 0.4 against 1.5 does in the original.
+	var inset := 8.0
+	var room := BAR_BUTTON - Vector2(inset, inset)
+	var fit := minf(room.x / natural.x, room.y / natural.y)
+	var size := natural * fit * fill
+	pic.position = BAR_BUTTON * 0.5 - size * 0.5
+	pic.size = size
 	btn.add_child(pic)
 
 
@@ -660,8 +681,8 @@ func _make_cursor_button(cursor_name: String) -> Control:
 ## its own top-left corner.
 func _place_button(parent: Control, node: Control, column: int, row: int) -> void:
 	node.position = Vector2(
-		column * BAR_SPACING + BAR_SPACING * 0.5 - 19.0,
-		row * BAR_SPACING + BAR_SPACING * 0.5 - 20.0)
+		column * BAR_SPACING + BAR_SPACING * 0.5 - BAR_BUTTON.x * 0.5,
+		row * BAR_SPACING + BAR_SPACING * 0.5 - BAR_BUTTON.y * 0.5)
 	parent.add_child(node)
 
 
@@ -705,7 +726,7 @@ func _make_icon_button(icon_name: String, tooltip: String) -> Control:
 ## all three states share it, and hover and press are a tint plus the original's
 ## two-pixel nudge instead of separate artwork.
 func _apply_chrome(btn: Button) -> void:
-	btn.custom_minimum_size = Vector2(38, 40)
+	btn.custom_minimum_size = BAR_BUTTON
 	var f: String = _icons.get("UI/Button", {}).get("normal", "")
 	if f == "":
 		return
