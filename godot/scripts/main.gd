@@ -1,3 +1,4 @@
+@tool
 extends Node2D
 
 ## Milestone 1 test build: the stage, the character, and mouse control.
@@ -5,6 +6,12 @@ extends Node2D
 ## Ported so far: the artwork and the rig (clip hierarchy, lean, IK, and the
 ## Swinger physics). Audio, mouth shapes and blinking are not in yet, so the
 ## control point is driven by the mouse or by a demo sweep.
+##
+## `@tool` so the stage, the character and the whole bottom bar show in the
+## editor. The bar and the backdrop are built from code in `_ready` rather than
+## authored into the scene, so without it the editor shows an empty stage. All
+## of the per-frame work is guarded off in the editor: `_process`, `_input` and
+## the screenshot paths only make sense in a running game.
 
 @onready var rig: MikuRig = $Miku
 
@@ -162,17 +169,21 @@ const VOWEL_BUTTONS := [
 
 
 func _ready() -> void:
-	for args in OS.get_cmdline_user_args():
-		var a := String(args)
-		if a == "--record":
-			_record = true
-			_record_frames = 150
-		elif a.begins_with("--record-frames="):
-			_record_frames = int(a.split("=")[1])
-		elif a.begins_with("--shot="):
-			_shot = a.split("=")[1]
-		elif a == "--rest-pose":
-			_run_rig = false
+	# The screenshot and recording flags come from the command line, which only
+	# exists in a running game. Skipping them in the editor keeps the viewport
+	# from writing a PNG every time the scene reloads.
+	if not Engine.is_editor_hint():
+		for args in OS.get_cmdline_user_args():
+			var a := String(args)
+			if a == "--record":
+				_record = true
+				_record_frames = 150
+			elif a.begins_with("--record-frames="):
+				_record_frames = int(a.split("=")[1])
+			elif a.begins_with("--shot="):
+				_shot = a.split("=")[1]
+			elif a == "--rest-pose":
+				_run_rig = false
 
 	_build_stage()
 
@@ -327,6 +338,11 @@ func control_to_stage(control: Vector2, view: Vector2 = VIEW) -> Vector2:
 
 
 func _process(delta: float) -> void:
+	# The editor does not animate the rig: without `@tool` the scripts here did
+	# not run at all, and now that they do, running them would fight the editor's
+	# own redraw and leave a character twitching in the viewport.
+	if Engine.is_editor_hint():
+		return
 	_elapsed += delta
 	_frame += 1
 
@@ -364,11 +380,17 @@ var _mouse_moved := false
 
 
 func _input(event: InputEvent) -> void:
+	# In the editor this node would otherwise swallow the mouse for the whole
+	# viewport, which makes the 2D view impossible to select things in.
+	if Engine.is_editor_hint():
+		return
 	if event is InputEventMouseMotion:
 		_mouse_moved = true
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if Engine.is_editor_hint():
+		return
 	if not (event is InputEventKey) or event.echo:
 		return
 

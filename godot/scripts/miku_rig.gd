@@ -1,8 +1,15 @@
+@tool
 class_name MikuRig
 extends Node2D
 
 ## The Miku character rig: builds the clip hierarchy from the extracted XFL
 ## data and drives it, ported from the `Miku` symbol's ActionScript.
+##
+## The clip tree is built from `rig.json` at runtime rather than authored into
+## the scene file, so without `@tool` the editor shows an empty `Node2D` where
+## the character should be. Everything in here is deterministic setup, so it is
+## safe to run in the editor; the animation itself is driven from `main.gd`'s
+## `_process`, which does not run there.
 ##
 ## Flash called every articulated piece a MovieClip and stored its rest
 ## transform in `_initForm`. Here each clip is a Node2D whose basis is derived
@@ -205,6 +212,12 @@ func _init_clip_roots() -> void:
 
 ## Rebuild the clip tree from the manifest, mirroring the original display list.
 func _build() -> void:
+	# The editor can re-run `_ready` on a scene reload, so clear anything a
+	# previous run left behind. Without this the clips would double up.
+	for child in get_children():
+		remove_child(child)
+		child.queue_free()
+	clips.clear()
 	var file := FileAccess.open(RIG_PATH, FileAccess.READ)
 	if file == null:
 		push_error("cannot open %s" % RIG_PATH)
