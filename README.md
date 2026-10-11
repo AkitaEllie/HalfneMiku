@@ -28,11 +28,12 @@ Flash formats that will bite anyone extending it.
 
 Ported: the art pipeline, the 36-clip rig (attachments, lean, IK), the Swinger
 spring physics, mouse follow, the face — 8 eye sets with blinking and 8 mouth
-sets with 7 vowels — and the eight backdrop presets. The character is vector
-throughout; the backdrops are currently PNG (see below).
+sets with 7 vowels — the eight backdrop presets, and the bottom UI bar with its
+four menus. The character is vector throughout; the backdrops are currently PNG
+(see below).
 
-Not yet: vector backdrops, audio, mouse recording/playback, and the timeline
-editor UI. See `PORTING.md`.
+Not yet: vector backdrops, audio, mouse recording/playback, the timeline editor
+UI, user-loaded backdrops, and key rebinding. See `PORTING.md`.
 
 ### Quick start
 
@@ -44,7 +45,6 @@ JPEXS/Free Flash Decompiler build for the backdrops:
 python3 -m venv .venv
 .venv/bin/pip install git+https://github.com/PluieElectrique/xfl2svg
 FFDEC=/path/to/ffdec.jar tools/xfl/extract.sh
-cd godot && godot --headless --import
 ```
 
 xfl2svg decodes geometry only, so it drops the gradients and filters the
@@ -68,10 +68,14 @@ renders a single frame on its own.
 
 ### Controls
 
+The bottom bar is the original's, rebuilt: a root menu, and face, lipsyncing and
+background menus behind it. Click through those, or use the keys — each bound
+button answers to its own key, as it does in the original.
+
 Move the mouse to make Miku follow it. `X` blinks (hold). `A` `S` `W` `E` `D` `Q`
 are mouth vowels (hold; they stack, and releasing falls back to the last one
 held). `Space` picks a random vowel. `1`-`8` choose an eye set, `[` and `]`
-cycle mouth sets, `B` cycles the backdrop. `Escape` quits — nothing else does.
+cycle mouth sets, `Tab` hides the bar. `Escape` quits — nothing else does.
 
 ### Layout
 

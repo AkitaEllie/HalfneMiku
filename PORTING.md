@@ -10,15 +10,16 @@ documented here; see the Godot docs for that.
 ## Current milestone
 
 The character stands, follows the mouse, and animates its own hair and clothes
-via the ported spring physics. Art, rig and face are done.
+via the ported spring physics. Art, rig, face and the bottom UI bar are done.
 
 Ported: art extraction, the 36-clip rig, Swinger physics, mouse follow, the
-face (8 eye sets with blink, 8 mouth sets with 7 vowels, held-vowel stack), and
-the eight backdrop presets — though those are PNG rather than vector, which is
-the next thing on the list.
+face (8 eye sets with blink, 8 mouth sets with 7 vowels, held-vowel stack), the
+eight backdrop presets — though those are PNG rather than vector, which is the
+next thing on the list — and the runtime-built UI bar with all four of its sets,
+its keybinds and its markers.
 
-Not yet: vector backdrops, audio, mouse recording/playback, and the timeline
-editor UI. See *Still to do*.
+Not yet: vector backdrops, audio, mouse recording/playback, the timeline editor
+UI, user-loaded backdrops, and key rebinding. See *Still to do*.
 
 ## Layout
 
@@ -30,9 +31,16 @@ reference/          originals and ground truth. Never edit these.
   reference_swf.png   JPEXS render of the whole character, 274x263 tight-cropped
   concert_stage.png   Ruffle capture of the running original, concert stage
   negi_field.png      ditto, negi field -- ground truth for placement
+  root.png            Ruffle captures of the UI bar, one per set: the root
+  expressions.png       menu, the face set, the lipsync set and the backdrop
+  lipsync.png          set. Far better ground truth for the bar than the
+  backdrop.png         full-stage shots, which are too small to read.
+  original.png         a single button from the original and from this port,
+  port.png             side by side. What caught the shadow bug.
   DV.gif              the original animation, for eyeballing motion
   as3/                the ActionScript helper classes shipped inside the .fla
 
+build.sh            the whole cycle: import, export, render a preview
 tools/              build scripts
   build.sh            export a standalone binary
   screenshot.sh       render one frame to a PNG
@@ -44,7 +52,10 @@ tools/              build scripts
     install_godot.py    copies assets into godot/
 
 godot/              the port itself
-  assets/bg/*.svg     the eight backdrop presets
+  assets/bg/*.png     the eight backdrop presets
+  assets/icons/*.svg  UI/Icon, UI/Cursors and UI/Button frames
+  assets/shaders/     the drop shadow the UI artwork carries
+  data/rig.json       generated clip tree, placement, expressions, UI frames
 preview/             current renders only
 legacy/preview/      superseded demo captures from earlier iterations
 build/               export output, gitignored
@@ -55,10 +66,9 @@ build/               export output, gitignored
 ```sh
 python3 -m venv .venv
 .venv/bin/pip install git+https://github.com/PluieElectrique/xfl2svg
-tools/xfl/extract.sh          # defaults to reference/Halfne Miku.fla
+FFDEC=/path/to/ffdec.jar tools/xfl/extract.sh   # defaults to reference/Halfne Miku.fla
 
-tools/screenshot.sh preview/current_port.png
-tools/build.sh                # -> build/linux/HalfneMikuStudio.x86_64
+./build.sh            # import + export + preview, the whole cycle
 ```
 
 `extract.sh` repairs the archive with `zip -FF`, renders each symbol through
@@ -67,7 +77,14 @@ xfl2svg, slices the composites, and installs cropped textures plus `rig.json`.
 `build.sh` needs Godot's export templates in
 `~/.local/share/godot/export_templates/<version>/`. The directory is named for
 the version without build metadata, i.e. `4.7.2.stable`, not
-`4.7.2.stable.official.ed1daf0bf`.
+`4.7.2.stable.official.ed1daf0bf` or `4.7.2.stable.arch_linux.ed1daf0bf`.
+
+**An `extract.sh` run that fails part way leaves the asset directory gutted.**
+It clears the output before installing, so an error anywhere in the crop or
+install step leaves icons and textures missing while the script's earlier
+output still looks like progress. Re-run it once the cause is fixed rather than
+patching the tree by hand, and check `git status` afterwards — the `.import`
+files come back with fresh UIDs, which is churn and not a real change.
 
 ## Composites interleave their art with their clips
 
@@ -197,6 +214,101 @@ and both are the sort of thing to revisit if the backdrop is ever redrawn.
 
 The user-supplied image path (`LoadData`, pannable and zoomable) is not ported.
 
+## The bottom bar is built at runtime, not drawn
+
+`UI_Pane` is an **empty symbol**. There is no bar artwork to extract: the whole
+thing is constructed by `UI_Pane_38.Init` at startup out of `Button`, `Icon`,
+`Cursors` and `ButtonSet`, paging between four sets. So the bar has to be
+rebuilt rather than extracted, which is also why `rig_manifest.mjs` grew a
+`frames` table: a symbol the UI picks by name at runtime has to be reachable.
+
+Four sets, each on the same grid:
+
+| set | contents |
+|---|---|
+| root | expressions, lipsyncing, backgrounds; studio, keybinds, help |
+| face | back, 8 eye sets, 8 mouth sets, blink at column ten |
+| vowel | back, 8 vowel buttons |
+| backdrop | back, 8 presets, 4 custom-background buttons |
+
+### It is an absolute grid, not a row of containers
+
+`ButtonSet.Display` seeks each button to
+`column * presence * SPACING + SPACING / 2`, with `SPACING` 45 and `mCols` 8,
+and `AddButton` takes an explicit column and row. An `HBoxContainer` — which is
+what this started as — would flow the buttons into one line and re-wrap them,
+which the original never does.
+
+The measured pitch is **43**, not the 45 in the source. That is not a
+contradiction: two 40-tall rows at 45 cannot fit inside the 87-tall pane, and
+the field's own minimum was silently forcing the pane taller than asked for.
+Panes measure 606x87 with the buttons three pixels from the top and bottom
+edges, and they are the same box for all four sets — the original's pane does
+not resize to whichever set is up.
+
+### The button chrome is one frame, used three times
+
+`Button.RefreshState` seeks to frame 1 (normal), 2 (hover or down) or 3 (both,
+which also nudges the label two pixels down). But **only frame 3 carries
+artwork in the `.fla`** — frames 1 and 2 are empty there. Rendering the compiled
+SWF instead fixes that and bakes `UI/keycode_display` in, which put a permanent
+stray "A" on every button. Frame 3 is clean, so all three states share it and
+hover and press differ by tint and the nudge `RefreshState` applies anyway.
+
+The glyph is not chrome. `Button.OnRebind` calls `mBind.ShowKeybind(keyCode)`,
+so the letter on a button is the key it is bound to, drawn at runtime — which
+is why the running original shows none on an unbound set, and why baking the
+SWF's version in would be wrong rather than merely ugly.
+
+### Move and zoom are Cursors, not Icons
+
+`UI_Pane_38.Init` builds those two from `Cursors` and scales them 1.5, which is
+why they read larger than their neighbours. That symbol sits at
+`LIBRARY/UI/Cursors.xml` rather than beside the other UI symbols, and has no
+symbol of its own in the SWF to look up, so it is named in `FRAME_SYMBOLS`
+directly.
+
+### The presets are windows, not fits
+
+The backdrop thumbnails scale each `Backdrop` to 40/640 and put it through a
+`scrollRect(70, 0, 500, 480)`, which crops the sides off. A fitted thumbnail
+shows more of each backdrop than the original does.
+
+The eye and mouth buttons likewise draw themselves from `Eyes` and `Mouth`
+instances at 0.4 and 1.5, so they are built from the same slices the rig uses
+rather than from separate icon artwork. Those scales are of the part *as it sits
+on the full-size head* and do not transfer to a cropped slice — applied
+literally, 0.4 makes the mouths invisible.
+
+### Every mLabel carries a drop shadow
+
+`Init` puts a `DropShadowFilter(2, 45, 0, 0.5, 8, 8, 1)` on every label it
+builds, so the artwork sits proud of the pane rather than flat on it. Godot has
+no drop-shadow filter for a Control, and `Button.icon` cannot carry a material,
+so this is a small shader in `godot/assets/shaders/`.
+
+Two things it gets wrong if you are not careful. The shadow copy must be
+**masked by the source alpha**, or it smears across the icon's transparent
+margins and onto the button's white interior — a grey band inside the chrome,
+which is what `reference/port.png` shows and `reference/original.png` does not.
+And the offset is taken at a **negative** step: the filter's 45 degrees puts
+the shadow below and to the right, so adding would smear it up over the top
+edge instead.
+
+### The keybind marker is a TextField and cannot be extracted
+
+`keycode_display_57` writes the bound key's character into a live `TextField`.
+Of `UI/keycode_display`'s eight frames, only `mouse` and the four `Arrow_*` hold
+any vector art — the frames the lettering appears in are **empty in the .fla**.
+So the marker is a label here, which is also what lets a rebind show a
+different character.
+
+Adding the symbol to `FRAME_SYMBOLS` anyway aborts `extract.sh` mid-install and
+leaves the asset directory gutted, which is why it is excluded and documented
+in the manifest instead. The bindings come from `Init`: the eye sets to `49 + i`,
+blink to `64 + 24`, and the vowel table's own codes, with the mouth sets, back
+and the custom-background tools bound to nothing.
+
 ## Traps in the Flash formats
 
 **A `.fla` is a zip of XFL (plain XML).** No Flash needed. But *this* archive
@@ -294,7 +406,18 @@ would leave the character in a state it can never leave.
 **Vowel key bindings are inconsistent in the original.** `Miku_4.UpdateKey`
 maps A/S/W/E/D/Q to a/i/u/e/o, while the UI buttons (`UI_Pane_38`) use the kana
 row: a/i/u/e/o on A/D/W/S/E. The keyboard handler wins, since that is the path a
-keystroke actually takes.
+keystroke actually takes — and the button markers now show the button set's
+bindings, which are the second set, not the one the keyboard handler reads.
+
+**A vowel button is a hold, not a click.** `Make_VowelButton` passes the key-down
+state through as `start` and releases on key-up. Firing it on `pressed` instead
+pushes the phase onto the mouth stack and pops it in the same frame, so the
+shape never changes and the button looks dead. Only the random button survives
+that mistake, because it does not use the stack.
+
+**A bind on a hidden set should be skipped.** The original keeps every
+`KeyBind` live whatever is on screen; here a hidden set's button would swallow a
+key with nothing visible to show for it, which is worse than the fidelity.
 
 ## Verifying
 
@@ -313,6 +436,13 @@ that an expression swap selected the expected file proves the lookup ran and
 nothing more — an expression can be correctly chosen and completely invisible.
 Render frames and diff the pixels. That is the only check that would have caught
 the buried face, and it is what caught it.
+
+**Zoom in on the reference captures.** A full-bar render is not evidence that a
+single button is right: the pane's own border is two pixels, the drop shadow is
+a two-pixel offset, and a marker is nine points. At bar scale all three
+disappear. Every styling bug in the bar was invisible until the captures were
+cropped to one button and blown up — the grey shadow band took three passes and
+a comparison against a crop of the original to pin down.
 
 Two headless helpers are useful for eyeballing:
 
@@ -351,3 +481,21 @@ godot --headless --script scripts/dump_rig.gd     # every clip's rest bounds
   audio sync.
 - **Enter** — bound to play/pause in the original; inert here until a transport
   exists.
+- **User-loaded backdrops** — `Backdrop.LoadData` takes a user image, scales it
+  the same way as a preset, and pans and zooms it with the mouse. The four
+  custom-background buttons in the backdrop set drive exactly this and are
+  currently inert: load, move, zoom, autofit.
+- **Key rebinding** — `KeyRebinder` is a draggable window listing every bind,
+  scrollable and drag-target, which writes through `KeyBind.ReadFromByteArray`.
+  `_rebind()` exists and is unused; the markers already re-render from it.
+- **The `B` key is redundant now.** It still cycles backdrops, but the original
+  has no such binding — it cycles from the panel, which the bar does. Worth
+  removing once nothing else depends on it.
+- **Studio, keybinds and help in the root menu** — three buttons that fire
+  events with no ported equivalent. They are inert rather than faked.
+- **The HIDE toggle** — the original's own, at the pane's right edge, which
+  slides and fades the bar out of the way of the mouse. `Tab` stands in for it.
+- **Mouth preview outlines** — the face and vowel buttons show filled shapes
+  where the original shows an outlined one. That is the extracted slice at
+  button size, not the layout; the original's outline comes from a filter on a
+  *stroked* mouth shape, and the slice carries only the fill.
