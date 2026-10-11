@@ -91,6 +91,11 @@ const BAR_COLS := 13
 ## Where the pane sits, measured off the four cropped captures of the original's
 ## sets, which all agree on 606x107. The stage is 800x600 and the pane sits
 ## against the bottom of it.
+## Where the pane's inside edge sits, relative to the grid origin. Measured off
+## the root capture: column one's button starts 46px in and column twelve ends
+## 46px short, and the first row sits 26px down in a 107-tall pane.
+const BAR_GRID_X := 46.0
+const BAR_GRID_Y := 24.0
 const BAR_LEFT := 94.0
 const BAR_BOTTOM := 10.0
 ## The pane's fixed size. All four set captures measure the same box, so the
@@ -422,9 +427,9 @@ func _cycle_set(sets: Array, index: int) -> void:
 ## this pane and this grid and differ only in what is on them.
 func _build_bar() -> void:
 	_load_icons()
-	# Sized from the grid rather than the other way round: the original's widest
-	# set is thirteen columns, and the pane is drawn around whichever set is up.
-	# 615 wide by 107 tall, again off the capture.
+	# Fixed at the original's 606x107 rather than fitted to the set on show: all
+	# four set captures measure the same box, so the pane does not resize to
+	# whichever set is up.
 	_bar = PanelContainer.new()
 	_bar.position = Vector2(BAR_LEFT, VIEW.y - BAR_BOTTOM - BAR_HEIGHT)
 	_bar.custom_minimum_size = Vector2(BAR_WIDTH, BAR_HEIGHT)
@@ -434,7 +439,16 @@ func _build_bar() -> void:
 	style.set_corner_radius_all(8)
 	style.set_border_width_all(2)
 	style.border_color = Color(1, 1, 1)
-	style.set_content_margin_all(8)
+	# The margin is not a free choice: `ButtonSet.Display` puts a button's centre
+	# at `column * SPACING + SPACING / 2` from the set's own origin, so the pane
+	# has to place that origin. Off the captures the root set's first button --
+	# column one -- sits 46px from the pane's inside edge, and column twelve ends
+	# 46px short of the right, so the grid is centred with a little slack at each
+	# end. Vertical follows from the same number.
+	style.content_margin_left = BAR_GRID_X
+	style.content_margin_right = BAR_GRID_X
+	style.content_margin_top = BAR_GRID_Y
+	style.content_margin_bottom = BAR_GRID_Y
 	_bar.add_theme_stylebox_override("panel", style)
 	add_child(_bar)
 
