@@ -54,12 +54,17 @@ backdrops fall back to broken geometry.
 Then either run the project from the editor, or build a standalone binary:
 
 ```sh
-tools/build.sh            # -> build/linux/HalfneMikuStudio.x86_64
+./build.sh                # release; ./build.sh debug for a debug build
 ```
+
+That imports the art, exports `build/linux/HalfneMikuStudio.x86_64`, and renders
+`preview/current_port.png` — the whole cycle, since a change can parse cleanly
+and still be wrong on screen. It finds Godot on `$PATH`, in `$GODOT`, or in
+`~/godot/`.
 
 Exporting needs Godot's export templates for your engine version in
 `~/.local/share/godot/export_templates/`. `tools/screenshot.sh <out.png>`
-renders a single frame, and `tools/build.sh debug` produces a debug build.
+renders a single frame on its own.
 
 ### Controls
 
