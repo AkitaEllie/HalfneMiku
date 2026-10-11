@@ -124,6 +124,10 @@ const THUMB_INSET := 3.0
 ## The filter `UI_Pane_38.Init` puts on each `mLabel`, in the shader's terms.
 const SHADOW_BLUR := 1.1
 const SHADOW_ALPHA := 0.5
+## The keybind marker's colour and size, read off the captures: a small teal
+## character in the button's top-left corner.
+const MARKER_COLOR := Color(0.18, 0.55, 0.45)
+const MARKER_SIZE := 9
 var _icons: Dictionary = {}
 var _thumbnails: Array[Button] = []
 
@@ -133,6 +137,10 @@ var _thumbnails: Array[Button] = []
 ## fades `presence`, so they share the pane's position and grid.
 var _sets: Dictionary = {}
 var _active_set := "root"
+## Every bound button, as `KeyBind`'s static list. A dictionary per bind, holding
+## the button, the key code `ShowKeybind` would print, and what to do on press
+## and release.
+var _keybinds: Array = []
 
 
 ## The face set's second row, in `UI_Pane_38.Init`'s order. This is *not* the
@@ -141,12 +149,15 @@ var _active_set := "root"
 ## while the keyboard cycle is a different sequence, so the two are kept apart.
 const MOUTH_MENU := ["happy", "neutral", "cat", "angry", "pout", "drool", "duck", "tongue"]
 
-## The vowel buttons' labels and phases, from `Init`'s `vowels` table. The last
-## is the random-phase button, which the original draws as an `Icon` rather than
-## a `Mouth` because there is no shape to show for it.
+## The vowel buttons' labels, phases, tooltips and key codes, from `Init`'s
+## `vowels` table: `["m", 0, "closed"], ["a", 65, "ah"], ["i", 68, "ee"],
+## ["u", 87, "oo"], ["e", 83, "eh"], ["o", 69, "oh"], ["n", 81, "teeth"]` and the
+## random button on SPACE. The first is the closed mouth, which is bound to
+## nothing, so it shows the blank marker.
 const VOWEL_BUTTONS := [
-	["m", "m", "closed"], ["a", "a", "ah"], ["i", "i", "ee"], ["u", "u", "oo"],
-	["e", "e", "eh"], ["o", "o", "oh"], ["n", "n", "teeth"], ["?", "random", "random"],
+	["m", 0, "closed", 0], ["a", 65, "ah", 65], ["i", 68, "ee", 68],
+	["u", 87, "oo", 87], ["e", 83, "eh", 83], ["o", 69, "oh", 69],
+	["n", 81, "teeth", 81], ["?", "random", "random", 32],
 ]
 
 
@@ -361,6 +372,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey) or event.echo:
 		return
 
+	# The bound buttons get first refusal, as they do in the original: every
+	# `KeyBind` on the stage sees the key before anything else does.
+	_dispatch_keybinds(event)
+
 	# These two are *held*, so they need the release as much as the press.
 	# Gating the whole handler on `event.pressed` (as this used to) meant the
 	# release never arrived and the eyes latched shut for good.
@@ -517,17 +532,22 @@ func _build_face_set() -> void:
 
 	var i := 0
 	for eye_set in EYE_SETS:
-		var btn := _make_part_button("Eye Set: " + eye_set)
+		# `face_set.AddButton` then `button.BindToKey(49 + i)`, so the eye sets
+		# are the digit row.
+		var btn := _make_bound_button("eye-" + eye_set, 49 + i)
 		_add_part_preview(btn,
 			rig.expression_texture(MikuRig.EYES_SYMBOL, eye_set, "open"), PART_FILL)
 		var eye_name: String = eye_set
 		btn.pressed.connect(func() -> void: rig.set_eye_set(eye_name))
+		_bind_key(btn, eye_name, func() -> void: rig.set_eye_set(eye_name))
 		_place_button(page, btn, i + 1, 0)
 		i += 1
 
 	i = 0
 	for mouth_set in MOUTH_MENU:
-		var btn := _make_part_button("Mouth Shape " + mouth_set)
+		# The mouth sets are not bound at all in the original, so they carry the
+		# blank `none` marker.
+		var btn := _make_bound_button("mouth-" + mouth_set, 0)
 		_add_part_preview(btn,
 			rig.expression_texture(MikuRig.MOUTH_SYMBOL, mouth_set, "a"), PART_FILL)
 		var mouth_name: String = mouth_set
@@ -535,9 +555,12 @@ func _build_face_set() -> void:
 		_place_button(page, btn, i + 1, 1)
 		i += 1
 
-	# Blink, which the original places at column ten rather than after the rows.
-	var blink := _make_icon_button("blink", "blink")
+	# Blink, which the original places at column ten rather than after the rows,
+	# and binds to `64 + 24` -- X.
+	var blink := _make_bound_button("blink", 64 + 24)
+	_add_shadowed_art(blink, _icons.get("UI/Icon", {}).get("blink", ""), ICON_FILL)
 	blink.pressed.connect(func() -> void: rig.set_eyes_closed(true))
+	_bind_key(blink, "blink", func() -> void: rig.set_eyes_closed(true))
 	_place_button(page, blink, 10, 0)
 
 
@@ -551,14 +574,19 @@ func _build_vowel_set() -> void:
 	var i := 0
 	for entry in VOWEL_BUTTONS:
 		var phase: String = entry[0]
+		# `Init`'s vowels table carries the key code for each: 0 for the closed
+		# mouth, 65 A, 68 D, 87 W, 83 S, 69 E, and SPACE for the random button.
+		var key_code: int = entry[3]
 		var btn: Button
 		if phase == "?":
 			# The random button picks a phase outright rather than holding one,
 			# so it stays on `pressed` -- there is nothing to release.
-			btn = _make_icon_button("random", "Random Mouth Shape")
+			btn = _make_bound_button("mp-?", key_code)
+			_add_shadowed_art(btn,
+				_icons.get("UI/Icon", {}).get("random", ""), ICON_FILL)
 			btn.pressed.connect(func() -> void: rig.set_mouth_phase("?"))
 		else:
-			btn = _make_part_button("Mouth Shape " + entry[2])
+			btn = _make_bound_button("mp-" + phase, key_code)
 			_add_part_preview(btn,
 				rig.expression_texture(MikuRig.MOUTH_SYMBOL, "neutral", phase), PART_FILL)
 			# A vowel button is a hold, not a click. `Make_VowelButton` passes
@@ -568,6 +596,7 @@ func _build_vowel_set() -> void:
 			# frame, leaving the mouth exactly as it started.
 			btn.button_down.connect(func() -> void: rig.stack_mouth(phase, true))
 			btn.button_up.connect(func() -> void: rig.stack_mouth(phase, false))
+			_bind_vowel_key(btn, phase)
 		_place_button(page, btn, i + 1, 0)
 		i += 1
 
@@ -721,6 +750,8 @@ func _add_shadowed_art(btn: Button, texture_path: String, fill: float) -> void:
 		return
 	var pic := TextureRect.new()
 	pic.texture = load(texture_path)
+	if pic.texture == null:
+		return
 	pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -741,7 +772,141 @@ func _add_shadowed_art(btn: Button, texture_path: String, fill: float) -> void:
 	btn.add_child(pic)
 
 
-## A button wearing the original's chrome.
+## `Button.Init`: a chrome button carrying a keybind and a name.
+##
+## The original gives every button a `KeyBind`, and `Button.OnRebind` pushes the
+## key's name onto the button's marker through `mBind.ShowKeybind`. `key_code`
+## is zero for the buttons that are not bound at all -- back, and the custom
+## background tools -- and those show the `none` frame, which is blank.
+func _make_bound_button(bind_id: String, key_code: int) -> Button:
+	var btn := Button.new()
+	btn.tooltip_text = bind_id
+	_apply_chrome(btn)
+	_add_key_marker(btn, key_code)
+	return btn
+
+
+## The marker a bound button carries in its top-left corner.
+##
+## `keycode_display_57.ShowKeybind` picks one of `keycode_display`'s frames from
+## the key's character code and writes that character into a live `TextField`.
+## Only `mouse` and the four `Arrow_*` frames hold vector art; the frames the
+## lettering appears in are empty in the .fla, so the glyph is a label here --
+## which is also what lets a rebind show something different.
+func _add_key_marker(btn: Button, key_code: int) -> void:
+	var mark := Label.new()
+	mark.text = _key_marker_text(key_code)
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mark.add_theme_color_override("font_color", MARKER_COLOR)
+	mark.add_theme_font_size_override("font_size", MARKER_SIZE)
+	mark.add_theme_constant_override("line_spacing", 0)
+	# Top-left, tucked inside the chrome the way `Button.RefreshState` leaves it.
+	mark.position = Vector2(4, 2)
+	mark.size = Vector2(16, 14)
+	mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	mark.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	mark.visible = mark.text != ""
+	btn.add_child(mark)
+	btn.set_meta("key_code", key_code)
+
+
+## The character `ShowKeybind` would put in its `TextField`.
+##
+## Letters and digits go in as themselves; space is named because the key is a
+## modifier rather than a character; anything else falls back to the code's
+## string, which is what the original's lookup miss does.
+func _key_marker_text(key_code: int) -> String:
+	if key_code <= 0:
+		return ""
+	if (key_code >= 65 and key_code <= 90) or (key_code >= 48 and key_code <= 57):
+		return String.chr(key_code)
+	if key_code == 32:
+		return "Space"
+	if key_code >= 96 and key_code <= 105:
+		return "Num%d" % (key_code - 96)
+	if key_code >= 112 and key_code <= 123:
+		return "F%d" % (key_code - 111)
+	match key_code:
+		8: return "Backspace"
+		9: return "Tab"
+		13: return "Enter"
+		16: return "Ctrl"
+		27: return "Esc"
+		19: return "Pause"
+		20: return "Caps"
+		33: return "PgUp"
+		34: return "PgDn"
+		35: return "End"
+		36: return "Home"
+		37: return "<-"
+		38: return "^"
+		39: return "->"
+		40: return "v"
+		45: return "Ins"
+		46: return "Del"
+		144: return "NumLock"
+		145: return "ScrLock"
+	return str(key_code)
+
+
+## Points a bound button at a new key and redraws its marker, which is what
+## `KeyBind.Rebind` does when it fires `CHANGE` and `Button.OnRebind` catches.
+func _rebind(btn: Button, key_code: int) -> void:
+	btn.set_meta("key_code", key_code)
+	for child in btn.get_children():
+		if child is Label:
+			child.text = _key_marker_text(key_code)
+			child.visible = child.text != ""
+
+
+## Registers a bound button so its own key fires it, as `KeyBind.SetListener`
+## does for the whole set at once.
+##
+## The button already has a mouse path wired by its caller; this adds the
+## keyboard one. The owning set is found from the button's place in the tree
+## rather than from `_active_set`, which is still `root` while the sets are
+## being built.
+func _bind_key(btn: Button, bind_id: String, action: Callable) -> void:
+	_keybinds.append({
+		"id": bind_id,
+		"button": btn,
+		"key": int(btn.get_meta("key_code", 0)),
+		"action": action,
+	})
+
+
+## The vowel buttons are held keys, so their keyboard path has to press and
+## release like the mouse one rather than firing once.
+func _bind_vowel_key(btn: Button, phase: String) -> void:
+	_keybinds.append({
+		"id": "mp-" + phase,
+		"button": btn,
+		"key": int(btn.get_meta("key_code", 0)),
+		"action": func() -> void: rig.stack_mouth(phase, true),
+		"release": func() -> void: rig.stack_mouth(phase, false),
+	})
+
+
+## Feeds a key event to whichever bind owns it, which is what `KeyBind`'s
+## `OnKeyDown` and `OnKeyUp` do for every bind on the stage.
+##
+## A bind on a set that is not showing is skipped: the original's keybinds stay
+## live whatever is on screen, but here a hidden set's buttons would swallow keys
+## with no visible effect, which is worse than the fidelity.
+func _dispatch_keybinds(event: InputEventKey) -> void:
+	for bind in _keybinds:
+		if int(bind["key"]) != event.keycode:
+			continue
+		var btn: Button = bind["button"]
+		if not is_instance_valid(btn) or not btn.is_visible_in_tree():
+			continue
+		if event.pressed:
+			bind["action"].call()
+		elif bind.has("release"):
+			bind["release"].call()
+
+
+## A chrome button wearing the original's chrome.
 ##
 ## `Button.RefreshState` seeks to frame 1 (normal), 2 (hover or down) or 3 (both,
 ## which also nudges the icon two pixels down), so the three textures are used

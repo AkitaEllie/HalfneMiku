@@ -313,6 +313,12 @@ function main() {
 // `cursor.gotoAndStop("move")` and scales the result 1.5. They live at
 // `LIBRARY/UI/Cursors.xml` rather than beside the other UI symbols, and the
 // class in the SWF carries no symbol of its own to look up.
+// `UI/keycode_display` is deliberately absent. `keycode_display_57` draws its
+// glyph in a live `TextField` set from the bound key's character, so only the
+// `mouse` and `Arrow_*` frames hold any vector art at all -- the frames the
+// lettering appears in are empty in the .fla. The markers are therefore drawn
+// as labels rather than extracted, which is also what lets a rebind show a
+// different character.
 const FRAME_SYMBOLS = ["UI/Icon", "UI/Cursors"];
 
 // `Button`'s chrome, for `RefreshState`'s normal / hover-or-down / down states.
